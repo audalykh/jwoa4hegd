@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include: { relativeToChangelogFile: true, file: create-tables.yaml }
+  - include: { relativeToChangelogFile: true, file: init-data.yaml }

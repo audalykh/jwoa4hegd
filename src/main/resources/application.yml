@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: clinic-test
+  sql:
+    init:
+      platform: mysql
+  datasource:
+    hikari:
+      maximumPoolSize: 100
+    url: ${db.url}?currentSchema=${db.schema}
+    username: ${db.username}
+    password: ${db.password}
+    driverClassName: com.mysql.jdbc.Driver
