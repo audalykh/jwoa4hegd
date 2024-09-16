@@ -11,3 +11,8 @@ spring:
     username: ${db.username}
     password: ${db.password}
     driverClassName: com.mysql.jdbc.Driver
+
+admin-doctor:
+  email: admin@test.com
+  password: 12345
+

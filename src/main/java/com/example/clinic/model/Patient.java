@@ -5,5 +5,5 @@ import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("P")
-public class Patient extends User {
+public class Patient extends Person {
 }

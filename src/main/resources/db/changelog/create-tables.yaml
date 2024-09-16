@@ -11,30 +11,36 @@ databaseChangeLog:
         - createTable:
             tableName: clinic
             columns:
-              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: id, type: int, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
               - column: { name: name, type: varchar(100), constraints: { nullable: false } }
               - column: { name: address, type: varchar(255), constraints: { nullable: false } }
               - column: { name: phone, type: varchar(32), constraints: { nullable: false } }
               - column: { name: logo, type: blob, constraints: { nullable: false } }
-              - column: { name: fromHour, type: integer, constraints: { nullable: false } }
-              - column: { name: endHour, type: integer, constraints: { nullable: false } }
+              - column: { name: from_hour, type: integer, constraints: { nullable: false } }
+              - column: { name: end_hour, type: integer, constraints: { nullable: false } }
   - changeSet:
-      id: create-user-table
-      author: AI Assistant
+      id: create-person-table
+      author: Alexey Udalykh
       preConditions:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: user
+                tableName: person
       changes:
         - createTable:
-            tableName: user
+            tableName: person
             columns:
-              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
-              - column: { name: firstName, type: varchar(50), constraints: { nullable: false } }
-              - column: { name: lastName, type: varchar(50), constraints: { nullable: false } }
+              - column: { name: id, type: int, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: first_name, type: varchar(50), constraints: { nullable: false } }
+              - column: { name: last_name, type: varchar(50), constraints: { nullable: false } }
               - column: { name: email, type: varchar(128), constraints: { nullable: false } }
-              - column: { name: createdDate, type: TIMESTAMP, constraints: { nullable: false } }
-              - column: { name: lastLogin, type: TIMESTAMP, constraints: { nullable: false } }
-              - column: { name: userType, type: varchar(1), constraints: { nullable: false } }
+              - column: { name: password, type: varchar(128), constraints: { nullable: false } }
+              - column: { name: created_date, type: TIMESTAMP, defaultValueComputed: CURRENT_TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: last_login, type: TIMESTAMP, constraints: { nullable: true } }
+              - column: { name: type, type: varchar(1), constraints: { nullable: false } }
               - column: { name: deleted, type: boolean, defaultValue: "false", constraints: { nullable: false } }
+        - createIndex:
+            indexName: idx_person_email
+            tableName: person
+            columns:
+              - column: { name: email }
