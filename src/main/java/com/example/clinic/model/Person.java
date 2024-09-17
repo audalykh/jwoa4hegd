@@ -3,7 +3,6 @@ package com.example.clinic.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,7 +52,6 @@ public abstract class Person implements Serializable {
     @Size(max = 128)
     private String password;
 
-    @NotNull
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdDate;
 

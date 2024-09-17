@@ -1,6 +1,6 @@
 package com.example.clinic.service;
 
-import com.example.clinic.model.Doctor;
+import com.example.clinic.dto.PersonBaseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -15,6 +15,8 @@ import org.springframework.util.Assert;
 @RequiredArgsConstructor
 public class InitializationService {
 
+    private static final EmailValidator EMAIL_VALIDATOR = EmailValidator.getInstance();
+
     @Value("${admin-doctor.email}")
     private String adminEmail;
     @Value("${admin-doctor.email}")
@@ -26,15 +28,15 @@ public class InitializationService {
     public void onStartupEvent() {
         log.trace("Checking if am admin doctor should be created on application startup");
 
-        var emailValidator = EmailValidator.getInstance();
-        Assert.isTrue(emailValidator.isValid(adminEmail),
+        Assert.isTrue(EMAIL_VALIDATOR.isValid(adminEmail),
                 "Invalid email address provided for admin doctor: " + adminEmail);
 
         var adminDoctor = doctorService.findByEmail(adminEmail);
         if (adminDoctor == null) {
             log.info("Admin doctor not found, creating new one");
             String name = adminEmail.split("@")[0];
-            doctorService.create((Doctor) new Doctor()
+
+            doctorService.create(new PersonBaseDto()
                     .setEmail(adminEmail)
                     .setPassword(adminPassword)
                     .setFirstName(name)

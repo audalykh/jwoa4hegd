@@ -1,5 +1,7 @@
 package com.example.clinic.service;
 
+import com.example.clinic.dto.PersonBaseDto;
+import com.example.clinic.mapper.PersonMapper;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
+    private final PersonMapper personMapper;
 
     @Transactional
-    public void create(Doctor doctor) {
-        if (doctorRepository.existsByEmail(doctor.getEmail())) {
-            throw new IllegalArgumentException("Doctor with email " + doctor.getEmail() + " already exists");
+    public void create(PersonBaseDto dto) {
+        if (doctorRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Doctor with email " + dto.getEmail() + " already exists");
         } else {
-            doctorRepository.save(doctor);
+            doctorRepository.save(personMapper.toDoctorEntity(dto));
         }
     }
 
