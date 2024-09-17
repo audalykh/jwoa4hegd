@@ -56,7 +56,7 @@ public abstract class Person implements Serializable {
     private LocalDateTime createdDate;
 
     @Column
-    private LocalDateTime lastLogin;
+    private LocalDateTime lastLoginDate;
 
     @Column
     private boolean deleted;

@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   application:
     name: clinic-test
@@ -10,9 +12,16 @@ spring:
     url: ${db.url}?currentSchema=${db.schema}
     username: ${db.username}
     password: ${db.password}
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
 
+security:
+  jwt:
+    secret-key: ''
+    expiration-time-minutes: 1440 # 24 hours
 admin-doctor:
   email: admin@test.com
   password: 12345
-

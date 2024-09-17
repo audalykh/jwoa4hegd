@@ -3,8 +3,8 @@ package com.example.clinic.service;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.exception.PersonAlreadyExistException;
 import com.example.clinic.mapper.PersonMapper;
-import com.example.clinic.model.Doctor;
-import com.example.clinic.repository.DoctorRepository;
+import com.example.clinic.model.Patient;
+import com.example.clinic.repository.PatientRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,29 +15,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DoctorService {
+public class PatientService {
 
-    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
     private final PersonMapper personMapper;
 
     @Transactional
     public void create(PersonBaseDto dto) throws PersonAlreadyExistException {
-        if (doctorRepository.existsByEmail(dto.getEmail())) {
-            throw new PersonAlreadyExistException("Doctor with email " + dto.getEmail() + " already exists");
+        if (patientRepository.existsByEmail(dto.getEmail())) {
+            throw new PersonAlreadyExistException("Patient with email " + dto.getEmail() + " already exists");
         } else {
-            doctorRepository.save(personMapper.toDoctorEntity(dto));
+            patientRepository.save(personMapper.toPatientEntity(dto));
         }
     }
 
     @Transactional(readOnly = true)
-    public Optional<Doctor> findByEmail(String email) {
-        return doctorRepository.findDoctorByEmail(email);
+    public Optional<Patient> findByEmail(String email) {
+        return patientRepository.findPatientByEmail(email);
     }
 
     @Transactional(readOnly = true)
-    public Doctor findByEmailOrThrow(String email) {
+    public Patient findByEmailOrThrow(String email) {
         return findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException("Doctor not found for email: " + email)
+                () -> new UsernameNotFoundException("Patient not found for email: " + email)
         );
     }
 }

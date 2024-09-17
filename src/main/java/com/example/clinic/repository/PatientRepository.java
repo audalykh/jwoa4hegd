@@ -1,13 +1,13 @@
 package com.example.clinic.repository;
 
-import com.example.clinic.model.Doctor;
+import com.example.clinic.model.Patient;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DoctorRepository extends CustomRepository<Doctor, Long> {
+public interface PatientRepository extends CustomRepository<Patient, Long> {
 
-    Optional<Doctor> findDoctorByEmail(String email);
+    Optional<Patient> findPatientByEmail(String email);
 
     boolean existsByEmail(String email);
 }

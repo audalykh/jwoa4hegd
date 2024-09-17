@@ -20,7 +20,7 @@ public class InitializationService {
 
     @Value("${admin-doctor.email}")
     private String adminEmail;
-    @Value("${admin-doctor.email}")
+    @Value("${admin-doctor.password}")
     private String adminPassword;
 
     private final DoctorService doctorService;
@@ -33,22 +33,24 @@ public class InitializationService {
                 "Invalid email address provided for admin doctor: " + adminEmail);
 
         var adminDoctor = doctorService.findByEmail(adminEmail);
-        if (adminDoctor == null) {
-            log.info("Admin doctor not found, creating new one");
-            String name = adminEmail.split("@")[0];
+        adminDoctor.ifPresentOrElse(
+                doctor -> log.trace("Admin doctor found; skipping creation..."),
+                this::createAdminDoctor);
+    }
 
-            try {
-                doctorService.create(new PersonBaseDto()
-                        .setEmail(adminEmail)
-                        .setPassword(adminPassword)
-                        .setFirstName(name)
-                        .setLastName(name));
-            } catch (PersonAlreadyExistException e) {
-                // Should never get here
-                log.error("Failed to create admin doctor", e);
-            }
-        } else {
-            log.trace("Admin doctor found; skipping creation...");
+    private void createAdminDoctor() {
+        log.info("Admin doctor not found, creating new one");
+        String name = adminEmail.split("@")[0];
+
+        try {
+            doctorService.create(new PersonBaseDto()
+                    .setEmail(adminEmail)
+                    .setPassword(adminPassword)
+                    .setFirstName(name)
+                    .setLastName(name));
+        } catch (PersonAlreadyExistException e) {
+            // Should never get here
+            log.error("Failed to create admin doctor", e);
         }
     }
 }

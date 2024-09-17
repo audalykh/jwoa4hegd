@@ -3,6 +3,8 @@ package com.example.clinic.mapper;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
 import com.example.clinic.model.Doctor;
+import com.example.clinic.model.Patient;
+import com.example.clinic.model.Person;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,5 +20,8 @@ public interface PersonMapper {
     Doctor toDoctorEntity(PersonBaseDto dto);
 
     @Mapping(target = "password", ignore = true)
-    PersonDto toDto(Doctor entity);
+    Patient toPatientEntity(PersonBaseDto dto);
+
+    @Mapping(target = "password", ignore = true)
+    PersonDto toDto(Person entity);
 }

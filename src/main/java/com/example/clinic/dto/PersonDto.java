@@ -15,5 +15,5 @@ public class PersonDto extends PersonBaseDto {
 
     private LocalDateTime createdDate;
 
-    private LocalDateTime lastLogin;
+    private LocalDateTime lastLoginDate;
 }

@@ -24,4 +24,3 @@ public abstract class PersonMapperDecorator implements PersonMapper {
         return entity;
     }
 }
-
