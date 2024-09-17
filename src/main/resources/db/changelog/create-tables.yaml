@@ -60,7 +60,7 @@ databaseChangeLog:
             tableName: appointment
             columns:
               - column: { name: id, type: int, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
-              - column: { name: created_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: created_at, type: TIMESTAMP, defaultValueComputed: CURRENT_TIMESTAMP, constraints: { nullable: false } }
               - column: { name: patient_id, type: int, constraints: { nullable: false } }
               - column: { name: doctor_created_id, type: int, constraints: { nullable: false } }
               - column: { name: doctor_updated_id, type: int, constraints: { nullable: false } }
@@ -85,4 +85,29 @@ databaseChangeLog:
             baseColumnNames: doctor_updated_id
             constraintName: fk_appointment_doctor_updated
             referencedTableName: person
+            referencedColumnNames: id
+  - changeSet:
+      id: create-test-table
+      author: Alexey Udalykh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: test
+      changes:
+        - createTable:
+            tableName: test
+            columns:
+              - column: { name: id, type: int, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: appointment_id, type: int, constraints: { nullable: false } }
+              - column: { name: type, type: VARCHAR(12), constraints: { nullable: false } }
+              - column: { name: test_date_time, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: result, type: VARCHAR(12), constraints: { nullable: true } }
+              - column: { name: result_date_time, type: TIMESTAMP }
+              - column: { name: deleted, type: BOOLEAN, defaultValue: "false", constraints: { nullable: false } }
+        - addForeignKeyConstraint:
+            baseTableName: test
+            baseColumnNames: appointment_id
+            constraintName: fk_test_appointment
+            referencedTableName: appointment
             referencedColumnNames: id

@@ -1,0 +1,59 @@
+package com.example.clinic.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.SQLDelete;
+
+@Getter
+@Setter
+@Entity
+@Accessors(chain = true)
+@SQLDelete(sql = "UPDATE test SET deleted = true WHERE id = ?")
+public class Test implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 4090099392270642623L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotNull
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id")
+    private Appointment appointment;
+
+    @NotNull
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TestType type;
+
+    @NotNull
+    @Column(nullable = false)
+    private LocalDateTime testDateTime;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private TestResult result;
+
+    @Column
+    private LocalDateTime resultDateTime;
+
+    @Column
+    private boolean deleted;
+}
