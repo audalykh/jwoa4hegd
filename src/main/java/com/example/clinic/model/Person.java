@@ -60,10 +60,10 @@ public abstract class Person implements Serializable {
     private String password;
 
     @Column(insertable = false, updatable = false)
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     @Column
-    private LocalDateTime lastLoginDate;
+    private LocalDateTime lastLoginAt;
 
     @Column
     private boolean deleted;

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface PersonRepository extends ExtendedJpaRepository<Person, Long> {
 
     @Modifying(clearAutomatically = true)
-    @Query("update Person p set p.lastLoginDate = CURRENT_TIMESTAMP where p.id = :id")
+    @Query("update Person p set p.lastLoginAt = CURRENT_TIMESTAMP where p.id = :id")
     void updateLastLoginDate(@Param("id") Long id);
 }

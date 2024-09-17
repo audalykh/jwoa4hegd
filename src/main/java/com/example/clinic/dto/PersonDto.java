@@ -13,7 +13,7 @@ public class PersonDto extends PersonBaseDto {
 
     private long id;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime lastLoginDate;
+    private LocalDateTime lastLoginAt;
 }
