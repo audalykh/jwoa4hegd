@@ -27,7 +27,7 @@ public class DoctorService {
     private final PersonMapper personMapper;
 
     @Transactional(readOnly = true)
-    public Page<Doctor> getDoctors(Pageable pageable) {
+    public Page<Doctor> getPage(Pageable pageable) {
         return doctorRepository.findAll(
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("lastName", "firstName")));
     }

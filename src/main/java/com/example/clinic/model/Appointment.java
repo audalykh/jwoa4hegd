@@ -40,10 +40,12 @@ public class Appointment extends AuditableEntity implements Serializable {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(name = "patient_id", insertable = false, updatable = false)
     private Patient patient;
+
+    @Column(name = "patient_id")
+    private Long patientId;
 
     @NotNull
     @Column

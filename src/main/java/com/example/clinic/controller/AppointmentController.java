@@ -1,10 +1,8 @@
 package com.example.clinic.controller;
 
-import com.example.clinic.dto.PersonBaseDto;
-import com.example.clinic.dto.PersonDto;
-import com.example.clinic.exception.PersonAlreadyExistException;
-import com.example.clinic.model.Doctor;
-import com.example.clinic.service.DoctorService;
+import com.example.clinic.dto.AppointmentDto;
+import com.example.clinic.dto.AppointmentRequestDto;
+import com.example.clinic.service.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,35 +24,35 @@ import static com.example.clinic.security.Auth.ROLE_DOCTOR;
 
 @RestController
 @Secured(ROLE_DOCTOR)
+@RequestMapping("/appointments")
 @RequiredArgsConstructor
-@RequestMapping("/doctors")
-public class DoctorController {
+public class AppointmentController {
 
-    private final DoctorService doctorService;
+    private final AppointmentService appointmentService;
 
     @GetMapping
-    public Page<Doctor> getPage(@PageableDefault Pageable pageable) {
-        return doctorService.getPage(pageable);
+    public Page<AppointmentDto> getPage(@PageableDefault Pageable pageable) {
+        return appointmentService.getPage(pageable);
     }
 
     @PostMapping
-    public PersonDto create(@RequestBody @Valid PersonBaseDto dto) throws PersonAlreadyExistException {
-        return doctorService.create(dto);
+    public AppointmentDto create(@RequestBody @Valid AppointmentRequestDto dto) {
+        return appointmentService.create(dto);
     }
 
     @GetMapping("/{id}")
-    public PersonDto get(@PathVariable Long id) {
-        return doctorService.getById(id);
+    public AppointmentDto get(@PathVariable Long id) {
+        return appointmentService.getById(id);
     }
 
     @PutMapping("/{id}")
-    public PersonDto update(@PathVariable Long id, @RequestBody @Valid PersonBaseDto dto) {
-        return doctorService.update(id, dto);
+    public AppointmentDto update(@PathVariable Long id, @RequestBody @Valid AppointmentRequestDto dto) {
+        return appointmentService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        doctorService.delete(id);
+        appointmentService.delete(id);
     }
 }

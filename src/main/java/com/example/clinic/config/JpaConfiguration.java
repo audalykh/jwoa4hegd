@@ -1,9 +1,9 @@
 package com.example.clinic.config;
 
-import com.example.clinic.model.AuditableEntity;
+import com.example.clinic.model.Doctor;
 import com.example.clinic.repository.ExtendedJpaRepositoryImpl;
+import com.example.clinic.service.DoctorService;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -20,26 +20,25 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class JpaConfiguration {
 
     @Bean
-    public AuditorAware<AuditableEntity> auditorProvider() {
-        return new JpaAuditorProvider();
+    public AuditorAware<Doctor> auditorProvider(DoctorService doctorService) {
+        return new JpaAuditorProvider(doctorService);
     }
 
-    @RequiredArgsConstructor
-    private static class JpaAuditorProvider implements AuditorAware<AuditableEntity> {
+    private record JpaAuditorProvider(DoctorService doctorService) implements AuditorAware<Doctor> {
 
         @Override
-        public Optional<AuditableEntity> getCurrentAuditor() {
+        public Optional<Doctor> getCurrentAuditor() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if (authentication == null || !authentication.isAuthenticated()) {
                 return Optional.empty();
             }
 
-            return Optional.ofNullable((AuditableEntity) authentication.getPrincipal());
-//            return Optional.ofNullable(SecurityContextHolder.getContext())
-//                    .map(SecurityContext::getAuthentication)
-//                    .map(Principal::getName)
-//                    .map(this::getUserInfo);
+            if (authentication.getPrincipal() instanceof String stringPrincipal) {
+                return doctorService.findByEmail(stringPrincipal);
+            }
+
+            return Optional.empty();
         }
     }
 }

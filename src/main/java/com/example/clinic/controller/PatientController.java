@@ -34,7 +34,7 @@ public class PatientController {
 
     @GetMapping
     public Page<Patient> getPage(@PageableDefault Pageable pageable) {
-        return patientService.getPatients(pageable);
+        return patientService.getPage(pageable);
     }
 
     @PostMapping
