@@ -27,5 +27,5 @@ public interface PersonMapper {
     PersonDto toDto(Person entity);
 
     @Mapping(target = "password", ignore = true)
-    Patient toEntity(PersonBaseDto dto, @MappingTarget Patient entity);
+    Person toEntity(PersonBaseDto dto, @MappingTarget Person entity);
 }

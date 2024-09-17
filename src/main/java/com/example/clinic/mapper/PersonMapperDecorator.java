@@ -30,7 +30,7 @@ public abstract class PersonMapperDecorator implements PersonMapper {
     }
 
     @Override
-    public Patient toEntity(PersonBaseDto dto, Patient entity) {
+    public Person toEntity(PersonBaseDto dto, Person entity) {
         return initPassword(delegate.toEntity(dto, entity), dto);
     }
 
