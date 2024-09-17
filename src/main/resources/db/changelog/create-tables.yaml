@@ -40,7 +40,10 @@ databaseChangeLog:
               - column: { name: type, type: varchar(1), constraints: { nullable: false } }
               - column: { name: deleted, type: boolean, defaultValue: "false", constraints: { nullable: false } }
         - createIndex:
+            # this combination is going to be used often for person searching
             indexName: idx_person_email
             tableName: person
             columns:
               - column: { name: email }
+              - column: { name: type }
+              - column: { name: deleted }

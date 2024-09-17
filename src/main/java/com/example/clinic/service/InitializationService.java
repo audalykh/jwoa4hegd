@@ -1,6 +1,7 @@
 package com.example.clinic.service;
 
 import com.example.clinic.dto.PersonBaseDto;
+import com.example.clinic.exception.PersonAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -36,11 +37,16 @@ public class InitializationService {
             log.info("Admin doctor not found, creating new one");
             String name = adminEmail.split("@")[0];
 
-            doctorService.create(new PersonBaseDto()
-                    .setEmail(adminEmail)
-                    .setPassword(adminPassword)
-                    .setFirstName(name)
-                    .setLastName(name));
+            try {
+                doctorService.create(new PersonBaseDto()
+                        .setEmail(adminEmail)
+                        .setPassword(adminPassword)
+                        .setFirstName(name)
+                        .setLastName(name));
+            } catch (PersonAlreadyExistException e) {
+                // Should never get here
+                log.error("Failed to create admin doctor", e);
+            }
         } else {
             log.trace("Admin doctor found; skipping creation...");
         }

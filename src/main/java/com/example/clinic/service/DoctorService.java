@@ -1,6 +1,7 @@
 package com.example.clinic.service;
 
 import com.example.clinic.dto.PersonBaseDto;
+import com.example.clinic.exception.PersonAlreadyExistException;
 import com.example.clinic.mapper.PersonMapper;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.repository.DoctorRepository;
@@ -19,9 +20,9 @@ public class DoctorService {
     private final PersonMapper personMapper;
 
     @Transactional
-    public void create(PersonBaseDto dto) {
+    public void create(PersonBaseDto dto) throws PersonAlreadyExistException {
         if (doctorRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("Doctor with email " + dto.getEmail() + " already exists");
+            throw new PersonAlreadyExistException("Doctor with email " + dto.getEmail() + " already exists");
         } else {
             doctorRepository.save(personMapper.toDoctorEntity(dto));
         }
