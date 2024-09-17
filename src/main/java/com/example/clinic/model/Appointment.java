@@ -28,7 +28,7 @@ import org.hibernate.annotations.SQLDelete;
 @Entity
 @Accessors(chain = true)
 @SQLDelete(sql = "UPDATE appointment SET deleted = true WHERE id = ?")
-public class Appointment implements Serializable {
+public class Appointment extends AuditableEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2148186452067092804L;
@@ -46,22 +46,9 @@ public class Appointment implements Serializable {
     private Patient patient;
 
     @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_created_id")
-    private Doctor doctorCreated;
-
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_updated_id")
-    private Doctor doctorUpdated;
-
-    @NotNull
     @Column
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
-
-    @Column
-    private LocalDateTime updatedAt;
 
     @Column
     @RevisitTimeValid

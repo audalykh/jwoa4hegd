@@ -62,8 +62,8 @@ databaseChangeLog:
               - column: { name: id, type: int, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
               - column: { name: created_at, type: TIMESTAMP, defaultValueComputed: CURRENT_TIMESTAMP, constraints: { nullable: false } }
               - column: { name: patient_id, type: int, constraints: { nullable: false } }
-              - column: { name: doctor_created_id, type: int, constraints: { nullable: false } }
-              - column: { name: doctor_updated_id, type: int, constraints: { nullable: false } }
+              - column: { name: created_by_id, type: int, constraints: { nullable: false } }
+              - column: { name: updated_by_id, type: int, constraints: { nullable: false } }
               - column: { name: status, type: VARCHAR(16), constraints: { nullable: false } }
               - column: { name: updated_at, type: TIMESTAMP, constraints: { nullable: true } }
               - column: { name: revisit_date_time, type: TIMESTAMP }
@@ -76,13 +76,13 @@ databaseChangeLog:
             referencedColumnNames: id
         - addForeignKeyConstraint:
             baseTableName: appointment
-            baseColumnNames: doctor_created_id
+            baseColumnNames: created_by_id
             constraintName: fk_appointment_doctor_created
             referencedTableName: person
             referencedColumnNames: id
         - addForeignKeyConstraint:
             baseTableName: appointment
-            baseColumnNames: doctor_updated_id
+            baseColumnNames: updated_by_id
             constraintName: fk_appointment_doctor_updated
             referencedTableName: person
             referencedColumnNames: id
