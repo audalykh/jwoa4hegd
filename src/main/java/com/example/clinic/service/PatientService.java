@@ -1,6 +1,8 @@
 package com.example.clinic.service;
 
 import com.example.clinic.dto.PersonBaseDto;
+import com.example.clinic.dto.PersonDto;
+import com.example.clinic.exception.DomainObjectNotFoundException;
 import com.example.clinic.exception.PersonAlreadyExistException;
 import com.example.clinic.mapper.PersonMapper;
 import com.example.clinic.model.Patient;
@@ -21,11 +23,13 @@ public class PatientService {
     private final PersonMapper personMapper;
 
     @Transactional
-    public void create(PersonBaseDto dto) throws PersonAlreadyExistException {
+    public PersonDto create(PersonBaseDto dto) throws PersonAlreadyExistException {
         if (patientRepository.existsByEmail(dto.getEmail())) {
             throw new PersonAlreadyExistException("Patient with email " + dto.getEmail() + " already exists");
         } else {
-            patientRepository.save(personMapper.toPatientEntity(dto));
+            // Save and refresh the entity to get the created date
+            var patient = patientRepository.saveAndRefresh(personMapper.toPatientEntity(dto));
+            return personMapper.toDto(patient);
         }
     }
 
@@ -36,8 +40,26 @@ public class PatientService {
 
     @Transactional(readOnly = true)
     public Patient findByEmailOrThrow(String email) {
-        return findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException("Patient not found for email: " + email)
-        );
+        return findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Patient not found for email: " + email));
+    }
+
+    @Transactional(readOnly = true)
+    public PersonDto getById(Long id) {
+        return patientRepository.findById(id)
+                .map(personMapper::toDto)
+                .orElseThrow(() -> new DomainObjectNotFoundException("Patient not found for id: " + id));
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        patientRepository.deleteById(id);
+    }
+
+    @Transactional
+    public PersonDto update(Long id, PersonBaseDto dto) {
+        var patient = patientRepository.findById(id)
+                .orElseThrow(() -> new DomainObjectNotFoundException("Patient not found for id: " + id));
+        return personMapper.toDto(personMapper.toEntity(dto, patient));
     }
 }

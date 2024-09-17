@@ -1,7 +1,7 @@
 package com.example.clinic.dto;
 
 import com.example.clinic.model.Person;
-import com.example.clinic.model.Role;
+import com.example.clinic.security.Role;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.List;

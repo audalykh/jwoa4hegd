@@ -1,6 +1,7 @@
-package com.example.clinic.model;
+package com.example.clinic.security;
 
-import com.example.clinic.config.Auth;
+import com.example.clinic.model.Doctor;
+import com.example.clinic.model.Person;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

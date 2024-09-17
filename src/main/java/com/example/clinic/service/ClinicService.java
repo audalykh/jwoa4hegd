@@ -43,7 +43,7 @@ public class ClinicService {
      * @throws DomainObjectNotFoundException if the clinic is not found
      */
     @Transactional(readOnly = true)
-    public Clinic findById(Long clinicId) {
+    public Clinic getById(Long clinicId) {
         return clinicRepository.findById(clinicId).orElseThrow(() ->
                 new DomainObjectNotFoundException("Could not find clinic with ID: " + clinicId));
     }
@@ -59,7 +59,7 @@ public class ClinicService {
      */
     @Transactional
     public Clinic update(Long clinicId, ClinicBaseDto clinicDto, byte[] bytes) {
-        var clinic = findById(clinicId);
+        var clinic = getById(clinicId);
         return clinicRepository.save(clinicMapper.toEntity(clinicDto, clinic)
                 .setLogo(bytes));
     }

@@ -2,6 +2,8 @@ package com.example.clinic.mapper;
 
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.model.Doctor;
+import com.example.clinic.model.Patient;
+import com.example.clinic.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,21 @@ public abstract class PersonMapperDecorator implements PersonMapper {
     @Override
     public Doctor toDoctorEntity(PersonBaseDto dto) {
         var entity = delegate.toDoctorEntity(dto);
+        return initPassword(entity, dto);
+    }
+
+    @Override
+    public Patient toPatientEntity(PersonBaseDto dto) {
+        var entity = delegate.toPatientEntity(dto);
+        return initPassword(entity, dto);
+    }
+
+    @Override
+    public Patient toEntity(PersonBaseDto dto, Patient entity) {
+        return initPassword(delegate.toEntity(dto, entity), dto);
+    }
+
+    private <T extends Person> T initPassword(T entity, PersonBaseDto dto) {
         if (entity != null) {
             entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         }

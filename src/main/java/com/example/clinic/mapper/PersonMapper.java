@@ -8,6 +8,7 @@ import com.example.clinic.model.Person;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
@@ -24,4 +25,7 @@ public interface PersonMapper {
 
     @Mapping(target = "password", ignore = true)
     PersonDto toDto(Person entity);
+
+    @Mapping(target = "password", ignore = true)
+    Patient toEntity(PersonBaseDto dto, @MappingTarget Patient entity);
 }

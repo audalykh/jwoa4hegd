@@ -13,6 +13,8 @@ public class PersonService {
 
     public Person updateLastLogin(long id) {
         personRepository.updateLastLoginDate(id);
+
+        // Read the person from the database to get the latest "last login date"
         return personRepository.findById(id).orElseThrow();
     }
 }

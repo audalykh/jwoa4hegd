@@ -1,8 +1,11 @@
 package com.example.clinic.exception;
 
-public class PersonAlreadyExistException extends Exception {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+
+public class PersonAlreadyExistException extends HttpClientErrorException {
 
     public PersonAlreadyExistException(String message) {
-        super(message);
+        super(HttpStatus.BAD_REQUEST, message);
     }
 }

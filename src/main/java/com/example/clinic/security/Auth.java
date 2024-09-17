@@ -1,4 +1,4 @@
-package com.example.clinic.config;
+package com.example.clinic.security;
 
 import lombok.experimental.UtilityClass;
 

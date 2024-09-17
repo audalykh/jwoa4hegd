@@ -4,7 +4,7 @@ import com.example.clinic.dto.JwtAuthenticationDto;
 import com.example.clinic.dto.SignInDto;
 import com.example.clinic.mapper.PersonMapper;
 import com.example.clinic.model.Person;
-import com.example.clinic.model.Role;
+import com.example.clinic.security.Role;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

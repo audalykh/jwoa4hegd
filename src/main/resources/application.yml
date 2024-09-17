@@ -29,3 +29,5 @@ security:
 admin-doctor:
   email: admin@test.com
   password: 12345
+
+  # @JaversSpringDataAuditable

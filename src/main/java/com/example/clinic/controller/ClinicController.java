@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.example.clinic.security.Auth.ROLE_DOCTOR;
+
 @RestController
-@Secured("ROLE_DOCTOR")
+@Secured(ROLE_DOCTOR)
 @RequiredArgsConstructor
 @RequestMapping("/clinics")
 public class ClinicController {
@@ -25,19 +27,19 @@ public class ClinicController {
     private final ClinicService clinicService;
 
     @PostMapping
-    public Clinic createClinic(@Valid ClinicBaseDto clinicDto,
+    public Clinic create(@Valid ClinicBaseDto clinicDto,
                                @RequestPart MultipartFile logo) throws IOException {
         return clinicService.create(clinicDto, logo.getBytes());
     }
 
-    @GetMapping("/{clinicId}")
-    public Clinic getClinic(@PathVariable Long clinicId) {
-        return clinicService.findById(clinicId);
+    @GetMapping("/{id}")
+    public Clinic get(@PathVariable Long id) {
+        return clinicService.getById(id);
     }
 
-    @PutMapping("/{clinicId}")
-    public Clinic updateClinic(@PathVariable Long clinicId, @Valid ClinicBaseDto clinicDto,
+    @PutMapping("/{id}")
+    public Clinic update(@PathVariable Long id, @Valid ClinicBaseDto clinicDto,
                                @RequestPart MultipartFile logo) throws IOException {
-        return clinicService.update(clinicId, clinicDto, logo.getBytes());
+        return clinicService.update(id, clinicDto, logo.getBytes());
     }
 }

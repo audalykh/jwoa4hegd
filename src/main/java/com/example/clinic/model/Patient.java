@@ -2,11 +2,12 @@ package com.example.clinic.model;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import java.io.Serial;
+import org.hibernate.annotations.SQLDelete;
+
+import static com.example.clinic.model.Person.SQL_DELETE;
 
 @Entity
 @DiscriminatorValue("P")
+@SQLDelete(sql = SQL_DELETE)
 public class Patient extends Person {
-    @Serial
-    private static final long serialVersionUID = -2236045265614268224L;
 }

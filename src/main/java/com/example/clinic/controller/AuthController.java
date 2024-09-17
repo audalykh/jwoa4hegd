@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.clinic.model.Role.DOCTOR;
-import static com.example.clinic.model.Role.PATIENT;
+import static com.example.clinic.security.Role.DOCTOR;
+import static com.example.clinic.security.Role.PATIENT;
 
 @RestController
 @RequestMapping("/auth")

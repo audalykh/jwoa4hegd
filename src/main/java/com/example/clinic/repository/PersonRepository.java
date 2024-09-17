@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PersonRepository extends CustomRepository<Person, Long> {
+public interface PersonRepository extends ExtendedJpaRepository<Person, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update Person p set p.lastLoginDate = CURRENT_TIMESTAMP where p.id = :id")

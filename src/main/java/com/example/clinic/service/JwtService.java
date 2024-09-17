@@ -2,7 +2,7 @@ package com.example.clinic.service;
 
 import com.example.clinic.config.JwtConfigProperties;
 import com.example.clinic.model.Person;
-import com.example.clinic.model.Role;
+import com.example.clinic.security.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.security.StandardSecureDigestAlgorithms;
