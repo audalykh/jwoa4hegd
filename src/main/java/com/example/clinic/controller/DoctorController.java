@@ -6,8 +6,8 @@ import com.example.clinic.exception.PersonAlreadyExistException;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.service.DoctorService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping
-    public Page<Doctor> getPage(@PageableDefault Pageable pageable) {
-        return doctorService.getPage(pageable);
+    public List<Doctor> getPage(@PageableDefault Pageable pageable) {
+        return doctorService.getPage(pageable).getContent();
     }
 
     @PostMapping

@@ -14,7 +14,7 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
-        uses = PersonMapper.class)
+        uses = {PersonMapper.class, TestMapper.class})
 public interface AppointmentMapper {
 
     AppointmentDto toDto(Appointment entity);

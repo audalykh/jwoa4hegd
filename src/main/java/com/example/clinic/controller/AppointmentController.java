@@ -5,8 +5,8 @@ import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.AppointmentRequestDto;
 import com.example.clinic.service.AppointmentService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -32,8 +32,8 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @GetMapping
-    public Page<AppointmentDto> getPage(@PageableDefault Pageable pageable) {
-        return appointmentService.getPage(pageable);
+    public List<AppointmentDto> getPage(@PageableDefault Pageable pageable) {
+        return appointmentService.getPage(pageable).getContent();
     }
 
     @PostMapping

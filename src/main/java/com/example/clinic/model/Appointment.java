@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLOrder;
 
 @Getter
 @Setter
@@ -56,6 +57,7 @@ public class Appointment extends AuditableEntity implements Serializable {
     @RevisitTimeValid
     private LocalDateTime revisitDateTime;
 
+    @SQLOrder ("test_date_time")
     @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Test> tests;
 

@@ -33,10 +33,13 @@ public class Test implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id")
+    @JoinColumn(name = "appointment_id", insertable = false, updatable = false)
     private Appointment appointment;
+
+    @NotNull
+    @Column(name = "appointment_id")
+    private Long appointmentId;
 
     @NotNull
     @Column(nullable = false)
