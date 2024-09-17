@@ -19,17 +19,17 @@ public class PersonDetails implements UserDetails {
     private final String username;
     private final String password;
     private final Long id;
-    private final Role role;
+    private final String role;
 
     public PersonDetails(Person person) {
         this.username = person.getEmail();
         this.password = person.getPassword();
         this.id = person.getId();
-        this.role = Role.fromPerson(person);
+        this.role = Role.fromPerson(person).getRoleName();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 }

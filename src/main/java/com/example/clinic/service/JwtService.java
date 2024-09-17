@@ -52,17 +52,9 @@ public class JwtService {
      */
     public boolean isTokenValid(String token, Person person) {
         final String userName = extractUserName(token);
-        return (userName.equals(person.getEmail())) && !isTokenExpired(token);
+        return userName.equals(person.getEmail()) && !isTokenExpired(token);
     }
 
-    /**
-     * Извлечение данных из токена
-     *
-     * @param token           токен
-     * @param claimsResolvers функция извлечения данных
-     * @param <T>             тип данных
-     * @return данные
-     */
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
@@ -76,42 +68,19 @@ public class JwtService {
                 .signWith(getSigningKey(), StandardSecureDigestAlgorithms.findBySigningKey(getSigningKey())).compact();
     }
 
-    /**
-     * Проверка токена на просроченность
-     *
-     * @param token токен
-     * @return true, если токен просрочен
-     */
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    /**
-     * Извлечение даты истечения токена
-     *
-     * @param token токен
-     * @return дата истечения
-     */
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    /**
-     * Извлечение всех данных из токена
-     *
-     * @param token токен
-     * @return данные
-     */
     private Claims extractAllClaims(String token) {
         return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token)
                 .getPayload();
     }
 
-    /**
-     * Получение ключа для подписи токена
-     *
-     * @return ключ
-     */
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtConfigProperties.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);

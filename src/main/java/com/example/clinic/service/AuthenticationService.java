@@ -37,8 +37,8 @@ public class AuthenticationService {
         ));
 
         Person person = switch (role) {
-            case ROLE_DOCTOR -> doctorService.findByEmailOrThrow(signInDto.getEmail());
-            case ROLE_PATIENT -> patientService.findByEmailOrThrow(signInDto.getEmail());
+            case DOCTOR -> doctorService.findByEmailOrThrow(signInDto.getEmail());
+            case PATIENT -> patientService.findByEmailOrThrow(signInDto.getEmail());
         };
 
         var jwt = jwtService.generateToken(person);

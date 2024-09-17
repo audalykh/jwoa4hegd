@@ -26,7 +26,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final String HEADER_NAME = HttpHeaders.AUTHORIZATION;
 
     private final JwtService jwtService;
     private final DoctorService doctorService;
@@ -38,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        var authHeader = request.getHeader(HEADER_NAME);
+        var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
@@ -51,8 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             var role = jwtService.extractRole(jwt);
 
             var person = switch (role) {
-                case ROLE_DOCTOR -> doctorService.findByEmailOrThrow(username);
-                case ROLE_PATIENT -> patientService.findByEmailOrThrow(username);
+                case DOCTOR -> doctorService.findByEmailOrThrow(username);
+                case PATIENT -> patientService.findByEmailOrThrow(username);
             };
 
             if (jwtService.isTokenValid(jwt, person)) {
@@ -61,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         person.getEmail(),
                         null,
-                        List.of(new SimpleGrantedAuthority(role.name()))
+                        List.of(new SimpleGrantedAuthority(role.getRoleName()))
                 );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

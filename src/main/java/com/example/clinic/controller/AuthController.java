@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.clinic.model.Role.ROLE_DOCTOR;
-import static com.example.clinic.model.Role.ROLE_PATIENT;
+import static com.example.clinic.model.Role.DOCTOR;
+import static com.example.clinic.model.Role.PATIENT;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,11 +22,11 @@ class AuthController {
 
     @PostMapping("/sign-in/doctor")
     public JwtAuthenticationDto doctorSignIn(@RequestBody @Valid SignInDto request) {
-        return authenticationService.signIn(request, ROLE_DOCTOR);
+        return authenticationService.signIn(request, DOCTOR);
     }
 
     @PostMapping("/sign-in/patient")
     public JwtAuthenticationDto patientSignIn(@RequestBody @Valid SignInDto request) {
-        return authenticationService.signIn(request, ROLE_PATIENT);
+        return authenticationService.signIn(request, PATIENT);
     }
 }

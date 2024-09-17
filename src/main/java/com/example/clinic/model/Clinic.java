@@ -7,9 +7,11 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 @Entity
 public class Clinic implements Serializable {
 
@@ -37,7 +39,7 @@ public class Clinic implements Serializable {
 
     @Column
     @NotNull
-    @Size(max = 1024 * 1024)
+    @Size(max = 1024 * 1024 * 10)
     private byte[] logo;
 
     @Column
