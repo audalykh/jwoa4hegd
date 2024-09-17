@@ -1,9 +1,12 @@
 package com.example.clinic.service;
 
+import com.example.clinic.dto.AppointmentCreateDto;
 import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.AppointmentRequestDto;
 import com.example.clinic.exception.DomainObjectNotFoundException;
+import com.example.clinic.exception.InvalidAppointmentStatusException;
 import com.example.clinic.mapper.AppointmentMapper;
+import com.example.clinic.model.Appointment;
 import com.example.clinic.model.AppointmentStatus;
 import com.example.clinic.repository.AppointmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +28,9 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentDto create(AppointmentRequestDto dto) {
+    public AppointmentDto create(AppointmentCreateDto dto) {
         var entity = appointmentMapper.toEntity(dto).setStatus(AppointmentStatus.NEW);
-        entity = appointmentRepository.saveAndRefresh(entity);
-        return appointmentMapper.toDto(entity);
+        return appointmentMapper.toDto(appointmentRepository.saveAndRefresh(entity));
     }
 
     @Transactional(readOnly = true)
@@ -39,8 +41,24 @@ public class AppointmentService {
 
     @Transactional
     public AppointmentDto update(Long id, AppointmentRequestDto dto) {
-        // TODO
-        return null;
+        var entity = appointmentRepository.findById(id)
+                .map(appointment -> validateStatus(dto, appointment))
+                .map(appointment -> appointmentMapper.toEntity(dto, appointment))
+                .orElseThrow(() -> new DomainObjectNotFoundException("Appointment not found for id: " + id));
+        return appointmentMapper.toDto(appointmentRepository.saveAndFlush(entity));
+    }
+
+    /**
+     * Validates the status of an appointment based on the provided appointment request DTO. The new appointment status
+     * should be either the same or after the current status of the appointment.
+     * @throws InvalidAppointmentStatusException if the new status is not valid.
+     */
+    private Appointment validateStatus(AppointmentRequestDto dto, Appointment appointment) {
+        var newStatus = dto.getStatus();
+        if (newStatus == null || newStatus.isAfterOrSame(appointment.getStatus())) {
+            return appointment;
+        }
+        throw new InvalidAppointmentStatusException(appointment.getStatus(), newStatus);
     }
 
     @Transactional

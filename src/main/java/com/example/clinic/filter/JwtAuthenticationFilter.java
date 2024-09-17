@@ -1,5 +1,6 @@
 package com.example.clinic.filter;
 
+import com.example.clinic.security.CustomUsernamePasswordAuthenticationToken;
 import com.example.clinic.service.DoctorService;
 import com.example.clinic.service.JwtService;
 import com.example.clinic.service.PatientService;
@@ -57,7 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(jwt, person)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                UsernamePasswordAuthenticationToken authToken = new CustomUsernamePasswordAuthenticationToken(
+                        person.getId(),
                         person.getEmail(),
                         null,
                         List.of(new SimpleGrantedAuthority(role.getRoleName()))

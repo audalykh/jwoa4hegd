@@ -1,5 +1,6 @@
 package com.example.clinic.controller;
 
+import com.example.clinic.dto.AppointmentCreateDto;
 import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.AppointmentRequestDto;
 import com.example.clinic.service.AppointmentService;
@@ -36,7 +37,7 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public AppointmentDto create(@RequestBody @Valid AppointmentRequestDto dto) {
+    public AppointmentDto create(@RequestBody @Valid AppointmentCreateDto dto) {
         return appointmentService.create(dto);
     }
 

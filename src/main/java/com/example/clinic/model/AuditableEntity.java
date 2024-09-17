@@ -6,7 +6,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,17 +20,21 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class AuditableEntity {
 
-    @NotNull
-    @CreatedBy
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_id")
+    @JoinColumn(name = "created_by_id", insertable = false, updatable = false)
     private Doctor createdBy;
 
-    @NotNull
-    @LastModifiedBy
+    @CreatedBy
+    @Column(name = "created_by_id")
+    private Long createdById;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "updated_by_id")
+    @JoinColumn(name = "updated_by_id", insertable = false, updatable = false)
     private Doctor updatedBy;
+
+    @LastModifiedBy
+    @Column(name = "updated_by_id")
+    private Long updatedById;
 
     @Column
     @LastModifiedDate
