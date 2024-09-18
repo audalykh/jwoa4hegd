@@ -26,7 +26,8 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, insertable = false, updatable = false)
+    @Column(nullable = false, insertable = false, updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime timestamp;
 
     @NotNull

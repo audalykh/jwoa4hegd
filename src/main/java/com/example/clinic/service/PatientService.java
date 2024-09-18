@@ -43,6 +43,14 @@ public class PatientService {
         }
     }
 
+    /**
+     * Creates a new patient or throws an exception if the patient already exists.
+     */
+    @Transactional
+    public Patient createOrThrow(PersonBaseDto dto) {
+        return patientRepository.save(personMapper.toPatientEntity(dto));
+    }
+
     @Transactional(readOnly = true)
     public Optional<Patient> findByEmail(String email) {
         return patientRepository.findPatientByEmail(email);

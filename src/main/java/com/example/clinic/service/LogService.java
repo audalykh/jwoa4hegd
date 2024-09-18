@@ -3,6 +3,7 @@ package com.example.clinic.service;
 import com.example.clinic.model.Log;
 import com.example.clinic.repository.LogRepository;
 import java.util.Collection;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,10 @@ public class LogService {
     @Transactional
     public void saveAll(Collection<Log> logs) {
         logRepository.saveAll(logs);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Log> getAll() {
+        return logRepository.findAll();
     }
 }

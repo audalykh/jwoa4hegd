@@ -9,9 +9,9 @@ spring:
   datasource:
     hikari:
       maximumPoolSize: 100
-    url: ${db.url}?currentSchema=${db.schema}
-    username: ${db.username}
-    password: ${db.password}
+    url:  jdbc:mysql://localhost:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -24,7 +24,7 @@ spring:
 
 security:
   jwt:
-    secret-key: ''
+    secret-key: '53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855'
     expiration-time-minutes: 1440 # 24 hours
 init-data:
   admin-doctor:

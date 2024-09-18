@@ -27,7 +27,7 @@ public class Logo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(columnDefinition = "BLOB")
     @NotNull
     @Size(max = 1024 * 1024 * 10)
     private byte[] data;

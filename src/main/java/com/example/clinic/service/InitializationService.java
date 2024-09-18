@@ -54,7 +54,7 @@ public class InitializationService {
 
         try {
             var doctor = dataConfiguration.getAdminDoctor();
-            doctorService.create(new PersonBaseDto()
+            doctorService.createOrThrow(new PersonBaseDto()
                     .setEmail(doctor.getEmail())
                     .setPassword(doctor.getPassword())
                     .setFirstName(doctor.getFirstName())

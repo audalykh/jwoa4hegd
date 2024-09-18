@@ -43,6 +43,14 @@ public class DoctorService {
         }
     }
 
+    /**
+     * Creates a new doctor or throws an exception if the doctor already exists.
+     */
+    @Transactional
+    public void createOrThrow(PersonBaseDto dto) {
+        doctorRepository.save(personMapper.toDoctorEntity(dto));
+    }
+
     @Transactional(readOnly = true)
     public Optional<Doctor> findByEmail(String email) {
         return doctorRepository.findDoctorByEmail(email);
