@@ -14,8 +14,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
+@Service("authenticationService")
 public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
