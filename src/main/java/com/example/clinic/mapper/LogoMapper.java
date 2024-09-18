@@ -1,5 +1,6 @@
 package com.example.clinic.mapper;
 
+import com.example.clinic.dto.LogoResourceDto;
 import com.example.clinic.model.Logo;
 import java.io.IOException;
 import org.mapstruct.Mapper;
@@ -18,8 +19,13 @@ public interface LogoMapper {
     @Mapping(source = "contentType", target = "type")
     Logo toEntity(MultipartFile file) throws IOException;
 
-    @Mapping(source = "originalFilename", target = "name")
-    @Mapping(source = "bytes", target = "data")
+    @Mapping(source = "resource.filename", target = "name")
+    @Mapping(source = "resource.contentAsByteArray", target = "data")
     @Mapping(source = "contentType", target = "type")
-    Logo toEntity(MultipartFile file, @MappingTarget Logo logo) throws IOException;
+    Logo toEntity(LogoResourceDto dto, @MappingTarget Logo logo) throws IOException;
+
+    @Mapping(source = "resource.filename", target = "name")
+    @Mapping(source = "resource.contentAsByteArray", target = "data")
+    @Mapping(source = "contentType", target = "type")
+    Logo toEntity(LogoResourceDto dto) throws IOException;
 }

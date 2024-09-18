@@ -26,8 +26,18 @@ security:
   jwt:
     secret-key: ''
     expiration-time-minutes: 1440 # 24 hours
-admin-doctor:
-  email: admin@test.com
-  password: 12345
+init-data:
+  admin-doctor:
+    email: admin@test.com
+    password: 12345
+    firstName: admin
+    lastName: admin
+  clinic-default:
+    auto-create: true
+    name: 'Achme Clinic'
+    address: 'Achme Town, 123 Main St.'
+    phone: 123456789
+    from-hour: 9
+    to-hour: 20
+    logo-url: 'classpath:static/images/clinic-logo.png'
 
-  # @JaversSpringDataAuditable

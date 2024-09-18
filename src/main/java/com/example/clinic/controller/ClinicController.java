@@ -2,6 +2,7 @@ package com.example.clinic.controller;
 
 import com.example.clinic.dto.ClinicBaseDto;
 import com.example.clinic.dto.ClinicDto;
+import com.example.clinic.dto.LogoResourceDto;
 import com.example.clinic.service.ClinicService;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -28,8 +29,8 @@ public class ClinicController {
 
     @PostMapping
     public ClinicDto create(@Valid ClinicBaseDto clinicDto,
-                            @RequestPart MultipartFile logo) throws IOException {
-        return clinicService.create(clinicDto, logo);
+                            @RequestPart("logo") MultipartFile logoFile) throws IOException {
+        return clinicService.create(clinicDto, LogoResourceDto.of(logoFile));
     }
 
     /**
@@ -43,7 +44,8 @@ public class ClinicController {
     }
 
     @PutMapping
-    public ClinicDto update(@Valid ClinicBaseDto clinicDto, @RequestPart MultipartFile logo) throws IOException {
-        return clinicService.update(clinicDto, logo);
+    public ClinicDto update(@Valid ClinicBaseDto clinicDto,
+                            @RequestPart("logo") MultipartFile logoFile) throws IOException {
+        return clinicService.update(clinicDto, LogoResourceDto.of(logoFile));
     }
 }
