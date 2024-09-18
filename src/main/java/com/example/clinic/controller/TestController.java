@@ -33,7 +33,7 @@ import static com.example.clinic.security.Auth.ROLE_PATIENT;
 
 @RestController
 @Secured(ROLE_DOCTOR)
-@RequestMapping("/tests")
+@RequestMapping("/api/tests")
 @RequiredArgsConstructor
 public class TestController {
 

@@ -25,7 +25,7 @@ import static com.example.clinic.security.Auth.ROLE_DOCTOR;
 
 @RestController
 @Secured(ROLE_DOCTOR)
-@RequestMapping("/appointments")
+@RequestMapping("/api/appointments")
 @RequiredArgsConstructor
 public class AppointmentController {
 

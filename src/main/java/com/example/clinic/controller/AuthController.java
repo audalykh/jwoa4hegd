@@ -14,7 +14,7 @@ import static com.example.clinic.security.Role.DOCTOR;
 import static com.example.clinic.security.Role.PATIENT;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 class AuthController {
 
