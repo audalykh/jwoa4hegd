@@ -14,7 +14,7 @@ import org.springframework.core.io.Resource;
 @RequiredArgsConstructor
 public class ReportsConfiguration {
 
-    @Value("classpath:reports/tests.jrxml")
+    @Value("classpath:templates/reports/tests.jrxml")
     private Resource testsTemplateResource;
 
     @Bean

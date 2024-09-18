@@ -28,7 +28,7 @@ class JasperReportService implements ReportService {
 
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("clinicName", clinic.getName());
-            parameters.put("clinicEmail", clinic.getAddress());
+            parameters.put("clinicEmail", clinic.getEmail());
             parameters.put("clinicPhone", clinic.getPhone());
             parameters.put("fullName", reportDto.patient().getFullName());
             parameters.put("logoImage", clinic.getLogo().getData());

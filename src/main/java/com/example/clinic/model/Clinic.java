@@ -29,8 +29,9 @@ public class Clinic implements Serializable {
 
     @Column
     @NotBlank
-    @Size(max = 255)
-    private String address;
+    @Email
+    @Size(max = 128)
+    private String email;
 
     @Column
     @NotBlank

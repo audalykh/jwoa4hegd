@@ -1,5 +1,6 @@
 package com.example.clinic.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -19,8 +20,9 @@ public class ClinicBaseDto {
     private String name;
 
     @NotBlank
-    @Size(max = 255)
-    private String address;
+    @Email
+    @Size(max = 128)
+    private String email;
 
     @NotBlank
     @Size(max = 32)

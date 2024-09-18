@@ -74,7 +74,7 @@ public class InitializationService {
             var clinic = dataConfiguration.getClinicDefault();
 
             ClinicBaseDto clinicDto = new ClinicBaseDto().setName(clinic.getName())
-                    .setAddress(clinic.getAddress())
+                    .setEmail(clinic.getEmail())
                     .setPhone(clinic.getPhone())
                     .setFromHour(clinic.getFromHour())
                     .setToHour(clinic.getToHour());

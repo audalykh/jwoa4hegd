@@ -35,7 +35,7 @@ init-data:
   clinic-default:
     auto-create: true
     name: 'Achme Clinic'
-    address: 'Achme Town, 123 Main St.'
+    email: 'achme.clinic@email.com'
     phone: 123456789
     from-hour: 9
     to-hour: 20

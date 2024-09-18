@@ -31,7 +31,7 @@ public class InitDataConfiguration {
     @Setter
     public static class ClinicDefaultProperties {
         private String name;
-        private String address;
+        private String email;
         private String phone;
         private int fromHour;
         private int toHour;

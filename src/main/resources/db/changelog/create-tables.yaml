@@ -29,7 +29,7 @@ databaseChangeLog:
             columns:
               - column: { name: id, type: int, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
               - column: { name: name, type: varchar(100), constraints: { nullable: false } }
-              - column: { name: address, type: varchar(255), constraints: { nullable: false } }
+              - column: { name: email, type: varchar(128), constraints: { nullable: false } }
               - column: { name: phone, type: varchar(32), constraints: { nullable: false } }
               - column: { name: logo_id, type: int, constraints:
                           { nullable: false, foreignKeyName: "fk_clinic_logo", references: "logo(id)" } }
