@@ -36,7 +36,7 @@ public class Appointment extends AuditableEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;

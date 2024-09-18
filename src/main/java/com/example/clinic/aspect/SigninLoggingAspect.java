@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class LoggingAspect {
+public class SigninLoggingAspect {
 
     private final LogService logService;
 

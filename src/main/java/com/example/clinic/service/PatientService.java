@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Service
+@Service("patientService")
 @RequiredArgsConstructor
 public class PatientService {
 
@@ -52,6 +52,12 @@ public class PatientService {
     public Patient findByEmailOrThrow(String email) {
         return findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Patient not found for email: " + email));
+    }
+
+    @Transactional(readOnly = true)
+    public Patient findByIdOrThrow(Long id) {
+        return patientRepository.findById(id)
+                .orElseThrow(() -> new DomainObjectNotFoundException("Patient not found for id: " + id));
     }
 
     @Transactional(readOnly = true)
