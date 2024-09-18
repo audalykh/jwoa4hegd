@@ -18,6 +18,6 @@ public final class LogoResourceDto {
     }
 
     public static LogoResourceDto of(MultipartFile file) {
-        return new LogoResourceDto(file);
+        return file == null ? null : new LogoResourceDto(file);
     }
 }

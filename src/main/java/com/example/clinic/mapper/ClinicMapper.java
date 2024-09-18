@@ -5,11 +5,13 @@ import com.example.clinic.dto.ClinicDto;
 import com.example.clinic.model.Clinic;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
+        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         uses = LogoMapper.class)
 public interface ClinicMapper {
 

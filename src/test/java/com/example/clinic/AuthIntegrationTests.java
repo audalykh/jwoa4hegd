@@ -32,6 +32,8 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
 
         assertThat(jwtAuthenticationDto.getJwt()).isNotNull();
         assertThat(person.getEmail()).isEqualTo(admin.getEmail());
+        assertThat(person.getLastLoginAt()).isNotNull();
+        assertThat(person.getCreatedAt()).isNotNull();
     }
 
     @Test

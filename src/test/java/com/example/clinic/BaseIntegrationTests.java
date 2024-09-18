@@ -4,6 +4,7 @@ import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.model.Patient;
 import com.example.clinic.service.LogService;
 import com.example.clinic.service.PatientService;
+import com.example.clinic.util.DbUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseIntegrationTests {
 
+    protected static final String DOCTOR = "DOCTOR";
+    protected static final String PATIENT = "PATIENT";
+
     protected PersonBaseDto dummyPatient;
 
     @Autowired
@@ -28,6 +32,9 @@ public abstract class BaseIntegrationTests {
 
     @Autowired
     protected LogService logService;
+
+    @Autowired
+    protected DbUtil dbUtil;
 
     @BeforeEach
     protected void baseSetup() {

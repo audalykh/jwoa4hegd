@@ -86,4 +86,10 @@ public class ClinicService {
     private static Specification<Clinic> alwaysTrueSpec() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
     }
+
+    @Transactional
+    public void delete() {
+        var clinic = getOneOrThrow();
+        clinicRepository.delete(clinic);
+    }
 }

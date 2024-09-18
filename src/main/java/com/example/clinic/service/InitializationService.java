@@ -4,7 +4,6 @@ import com.example.clinic.config.InitDataConfiguration;
 import com.example.clinic.dto.ClinicBaseDto;
 import com.example.clinic.dto.LogoResourceDto;
 import com.example.clinic.dto.PersonBaseDto;
-import com.example.clinic.exception.PersonAlreadyExistException;
 import java.nio.file.Files;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,17 +51,12 @@ public class InitializationService {
     private void createAdminDoctor() {
         log.info("Admin doctor not found, creating new one");
 
-        try {
-            var doctor = dataConfiguration.getAdminDoctor();
-            doctorService.createOrThrow(new PersonBaseDto()
-                    .setEmail(doctor.getEmail())
-                    .setPassword(doctor.getPassword())
-                    .setFirstName(doctor.getFirstName())
-                    .setLastName(doctor.getLastName()));
-        } catch (PersonAlreadyExistException e) {
-            // Should never get here
-            log.error("Failed to create admin doctor", e);
-        }
+        var doctor = dataConfiguration.getAdminDoctor();
+        doctorService.createOrThrow(new PersonBaseDto()
+                .setEmail(doctor.getEmail())
+                .setPassword(doctor.getPassword())
+                .setFirstName(doctor.getFirstName())
+                .setLastName(doctor.getLastName()));
     }
 
     private void initClinic() {

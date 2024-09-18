@@ -59,7 +59,7 @@ public abstract class Person implements Serializable {
     @Size(max = 128)
     private String password;
 
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column
