@@ -16,6 +16,8 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface TestMapper {
 
+    @Mapping(target = "result", expression =
+            "java(dto.getResult() != null ? dto.getResult() : com.example.clinic.model.TestResult.UNKNOWN)")
     Test toEntity(TestCreateDto dto);
 
     Test toEntity(TestDto dto);
@@ -23,4 +25,6 @@ public interface TestMapper {
     @Mapping(target = "result", nullValuePropertyMappingStrategy = IGNORE)
     @Mapping(target = "resultDateTime", nullValuePropertyMappingStrategy = IGNORE)
     Test toEntity(TestBaseDto dto, @MappingTarget Test test);
+
+    TestDto toDto(Test entity);
 }
