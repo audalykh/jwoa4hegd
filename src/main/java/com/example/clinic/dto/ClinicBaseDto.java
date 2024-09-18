@@ -34,5 +34,5 @@ public class ClinicBaseDto {
     @NotNull
     @Min(0)
     @Max(24)
-    private Integer endHour;
+    private Integer toHour;
 }

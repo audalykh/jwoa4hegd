@@ -37,10 +37,10 @@ public class Clinic implements Serializable {
     @Size(max = 32)
     private String phone;
 
-    @Column
     @NotNull
-    @Size(max = 1024 * 1024 * 10)
-    private byte[] logo;
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "logo_id", referencedColumnName = "id")
+    private Logo logo;
 
     @Column
     @NotNull
