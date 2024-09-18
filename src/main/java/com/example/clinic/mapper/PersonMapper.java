@@ -27,5 +27,8 @@ public interface PersonMapper {
     PersonDto toDto(Person entity);
 
     @Mapping(target = "password", ignore = true)
+    PersonBaseDto toBaseDto(Person entity);
+
+    @Mapping(target = "password", ignore = true)
     Person toEntity(PersonBaseDto dto, @MappingTarget Person entity);
 }

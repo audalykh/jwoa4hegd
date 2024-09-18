@@ -6,6 +6,7 @@ import com.example.clinic.exception.PersonAlreadyExistException;
 import com.example.clinic.model.Patient;
 import com.example.clinic.service.PatientService;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.example.clinic.security.Auth.ROLE_DOCTOR;
+import static com.example.clinic.security.Auth.ROLE_PATIENT;
 
 @RestController
 @Secured(ROLE_DOCTOR)
@@ -56,5 +58,15 @@ public class PatientController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         patientService.delete(id);
+    }
+
+    /**
+     * Returns the current Person data; only names and email are returned; all other sensitive data
+     * like "id", create/login timestamps are omitted.
+     */
+    @Secured(ROLE_PATIENT)
+    @GetMapping("/current")
+    public PersonBaseDto getCurrent(Principal principal) {
+        return patientService.getDtoByEmailOrThrow(principal.getName());
     }
 }

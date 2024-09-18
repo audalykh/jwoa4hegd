@@ -55,6 +55,13 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
+    public PersonBaseDto getDtoByEmailOrThrow(String email) {
+        return findByEmail(email)
+                .map(personMapper::toBaseDto)
+                .orElseThrow(() -> new UsernameNotFoundException("Patient not found for email: " + email));
+    }
+
+    @Transactional(readOnly = true)
     public PersonDto getById(Long id) {
         return patientRepository.findById(id)
                 .map(personMapper::toDto)
