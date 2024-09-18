@@ -1,16 +1,22 @@
 package com.example.clinic.controller;
 
+import com.example.clinic.dto.ReportDto;
 import com.example.clinic.dto.TestBaseDto;
 import com.example.clinic.dto.TestCreateDto;
 import com.example.clinic.dto.TestDto;
 import com.example.clinic.model.Patient;
+import com.example.clinic.service.ClinicService;
 import com.example.clinic.service.PatientService;
 import com.example.clinic.service.TestService;
+import com.example.clinic.service.report.ReportService;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +37,12 @@ import static com.example.clinic.security.Auth.ROLE_PATIENT;
 @RequiredArgsConstructor
 public class TestController {
 
+    private static final String PDF_REPORT_FILENAME = "tests_report.pdf";
+
     private final TestService testService;
+    private final ClinicService clinicService;
     private final PatientService patientService;
+    private final ReportService reportService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -64,5 +74,25 @@ public class TestController {
     public List<TestDto> getPatientTests(Principal principal) {
         Patient patient = patientService.findByEmailOrThrow(principal.getName());
         return testService.getPatientTests(patient);
+    }
+
+    /**
+     * Generates a PDF report containing all the medical tests taken by the patient.
+     */
+    @Secured(ROLE_PATIENT)
+    @GetMapping(value = "/report", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> generateReport(Principal principal) {
+        Patient patient = patientService.findByEmailOrThrow(principal.getName());
+        byte[] bytes = reportService.generateReport(new ReportDto(
+                testService.getPatientTests(patient),
+                patient,
+                clinicService.getOneOrThrow()
+        ));
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + PDF_REPORT_FILENAME)
+                .body(bytes);
     }
 }

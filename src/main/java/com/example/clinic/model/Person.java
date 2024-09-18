@@ -67,4 +67,8 @@ public abstract class Person implements Serializable {
 
     @Column
     private boolean deleted;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
  }

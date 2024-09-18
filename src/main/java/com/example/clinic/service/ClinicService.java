@@ -72,7 +72,8 @@ public class ClinicService {
         return clinicRepository.exists(alwaysTrueSpec());
     }
 
-    private Clinic getOneOrThrow() {
+    @Transactional(readOnly = true)
+    public Clinic getOneOrThrow() {
         return getOne().orElseThrow(() ->
                         new DomainObjectNotFoundException("Could not find existing clinic"));
     }

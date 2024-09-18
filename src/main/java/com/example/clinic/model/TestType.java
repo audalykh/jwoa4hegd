@@ -15,4 +15,9 @@ public enum TestType {
     public String getName() {
         return "Test " + (ordinal() + 1);
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
