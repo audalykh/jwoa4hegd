@@ -40,4 +40,6 @@ init-data:
     from-hour: 9
     to-hour: 20
     logo-url: 'classpath:static/images/clinic-logo.png'
+jobs:
+  close-appointments-cron: 0 0 0 * * ? # every day at midnight
 

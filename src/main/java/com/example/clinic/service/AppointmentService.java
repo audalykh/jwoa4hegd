@@ -65,4 +65,17 @@ public class AppointmentService {
     public void delete(Long id) {
         appointmentRepository.deleteById(id);
     }
+
+    /**
+     * Closes all appointments that are not already closed.
+     *
+     * @return The number of appointments closed.
+     */
+    public int closeAppointments() {
+        var notClosedAppointments = appointmentRepository.findAppointmentsByStatusNot(AppointmentStatus.CLOSED);
+        notClosedAppointments.forEach(appointment -> appointment.setStatus(AppointmentStatus.CLOSED));
+        appointmentRepository.saveAll(notClosedAppointments);
+
+        return notClosedAppointments.size();
+    }
 }
