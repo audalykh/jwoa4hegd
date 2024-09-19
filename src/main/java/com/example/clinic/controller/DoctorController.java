@@ -3,7 +3,6 @@ package com.example.clinic.controller;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
 import com.example.clinic.exception.PersonAlreadyExistException;
-import com.example.clinic.model.Doctor;
 import com.example.clinic.service.DoctorService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -33,7 +32,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping
-    public List<Doctor> getPage(@PageableDefault Pageable pageable) {
+    public List<PersonDto> getPage(@PageableDefault Pageable pageable) {
         return doctorService.getPage(pageable).getContent();
     }
 

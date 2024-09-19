@@ -21,6 +21,9 @@ public abstract class BaseTests {
     protected static final String DOCTOR = "DOCTOR";
     protected static final String PATIENT = "PATIENT";
 
+    protected static final String ADMIN_EMAIL = "admin@achme.com";
+    protected static final String PATIENT_EMAIL = "bob.bee@email.com";
+
     protected PersonBaseDto dummyPatient;
     protected PersonBaseDto dummyDoctor;
 
@@ -38,7 +41,7 @@ public abstract class BaseTests {
 
     @BeforeEach
     protected void baseSetup() {
-        dummyPatient = new PersonBaseDto("Bob", "Bee", "bob.bee@email.com", "12345678");
+        dummyPatient = new PersonBaseDto("Bob", "Bee", PATIENT_EMAIL, "12345678");
         dummyDoctor = new PersonBaseDto("Donny", "Doe", "alice.doe@email.com", "12345678");
     }
 }

@@ -52,7 +52,7 @@ public class PatientService extends BasePersonService<Patient, PatientRepository
     }
 
     @Transactional(readOnly = true)
-    public PersonBaseDto getDtoByEmailOrThrow(String email) {
+    public PersonBaseDto getByEmailOrThrow(String email) {
         return findByEmail(email)
                 .map(personMapper::toBaseDto)
                 .orElseThrow(() -> new UsernameNotFoundException("Patient not found for email: " + email));

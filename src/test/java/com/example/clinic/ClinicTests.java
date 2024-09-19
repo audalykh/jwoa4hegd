@@ -25,7 +25,7 @@ class ClinicTests extends BaseTests {
     private ResourceLoader resourceLoader;
 
     @Test
-    @WithMockUser(username = "adminDoctor", roles = DOCTOR)
+    @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
     public void shouldGetExistingClinicByDoctor() throws Exception {
         // Act
         var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/clinic")
@@ -53,7 +53,7 @@ class ClinicTests extends BaseTests {
     }
 
     @Test
-    @WithMockUser(username = "adminDoctor", roles = DOCTOR)
+    @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
     public void shouldUpdateClinic() throws Exception {
 
         // Arrange
@@ -72,7 +72,7 @@ class ClinicTests extends BaseTests {
     }
 
     @Test
-    @WithMockUser(username = "adminDoctor", roles = DOCTOR)
+    @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
     public void shouldCreateNewClinic() throws Exception {
 
         // Arrange: delete the only clinic
@@ -98,7 +98,7 @@ class ClinicTests extends BaseTests {
     }
 
     @Test
-    @WithMockUser(username = "adminDoctor", roles = DOCTOR)
+    @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
     public void shouldFailToCreateAnotherClinic() throws Exception {
 
         // Arrange

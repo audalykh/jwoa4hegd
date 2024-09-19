@@ -1,6 +1,7 @@
 package com.example.clinic.util;
 
 import com.example.clinic.dto.PersonBaseDto;
+import com.example.clinic.dto.PersonDto;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.model.Patient;
 import com.example.clinic.service.DoctorService;
@@ -27,7 +28,11 @@ public class DomainUtil {
         return doctorService.createOrThrow(doctor);
     }
 
-    public List<Doctor> getAllDoctors() {
+    public List<PersonDto> getAllDoctors() {
         return doctorService.getPage(Pageable.unpaged()).getContent();
+    }
+
+    public List<PersonDto> getAllPatients() {
+        return patientService.getPage(Pageable.unpaged()).getContent();
     }
 }

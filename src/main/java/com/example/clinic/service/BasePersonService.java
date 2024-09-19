@@ -1,5 +1,6 @@
 package com.example.clinic.service;
 
+import com.example.clinic.dto.PersonDto;
 import com.example.clinic.mapper.PersonMapper;
 import com.example.clinic.model.Person;
 import com.example.clinic.repository.BasePersonRepository;
@@ -18,12 +19,12 @@ public abstract class BasePersonService<T extends Person, R extends BasePersonRe
     protected final PersonMapper personMapper;
 
     @Transactional(readOnly = true)
-    public Page<T> getPage(Pageable pageable) {
+    public Page<PersonDto> getPage(Pageable pageable) {
         var sort = Sort.by("lastName", "firstName");
         Pageable pageRequest = pageable.isUnpaged() ?
                 Pageable.unpaged(sort) :
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        return repository.findAll(pageRequest);
+        return repository.findAll(pageRequest).map(personMapper::toDto);
     }
 
     @Transactional(readOnly = true)

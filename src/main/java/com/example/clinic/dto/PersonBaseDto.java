@@ -1,5 +1,6 @@
 package com.example.clinic.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,4 +35,9 @@ public class PersonBaseDto {
     @Size(max = 64)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
+
+    @JsonIgnore
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

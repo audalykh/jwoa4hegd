@@ -3,7 +3,6 @@ package com.example.clinic.controller;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
 import com.example.clinic.exception.PersonAlreadyExistException;
-import com.example.clinic.model.Patient;
 import com.example.clinic.service.PatientService;
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -35,7 +34,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public List<Patient> getPage(@PageableDefault Pageable pageable) {
+    public List<PersonDto> getPage(@PageableDefault Pageable pageable) {
         return patientService.getPage(pageable).getContent();
     }
 
@@ -67,6 +66,6 @@ public class PatientController {
     @Secured(ROLE_PATIENT)
     @GetMapping("/current")
     public PersonBaseDto getCurrent(Principal principal) {
-        return patientService.getDtoByEmailOrThrow(principal.getName());
+        return patientService.getByEmailOrThrow(principal.getName());
     }
 }
