@@ -1,6 +1,7 @@
 package com.example.clinic.dto;
 
 import com.example.clinic.model.AppointmentStatus;
+import com.example.clinic.validation.RevisitTimeValid;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,6 @@ public class AppointmentRequestDto {
 
     private AppointmentStatus status;
 
+    @RevisitTimeValid
     private LocalDateTime revisitDateTime;
 }

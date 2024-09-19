@@ -1,6 +1,5 @@
 package com.example.clinic.model;
 
-import com.example.clinic.validation.RevisitTimeValid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,10 +53,9 @@ public class Appointment extends AuditableEntity implements Serializable {
     private AppointmentStatus status;
 
     @Column
-    @RevisitTimeValid
     private LocalDateTime revisitDateTime;
 
-    @SQLOrder ("test_date_time")
+    @SQLOrder("test_date_time")
     @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Test> tests;
 
