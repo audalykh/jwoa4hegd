@@ -18,11 +18,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
 @Entity
 @Accessors(chain = true)
+@SQLRestriction("deleted = false")
 @SQLDelete(sql = "UPDATE test SET deleted = true WHERE id = ?")
 public class Test implements Serializable {
 

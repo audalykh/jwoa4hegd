@@ -19,4 +19,9 @@ public class DbUtil {
     public List<Map<String, Object>> doSelect(String sqlSelect) {
         return jdbcOperations.queryForList(sqlSelect);
     }
+
+    public Long getPersonIdByEmail(String email, String type) {
+        return jdbcOperations.queryForObject("select id from person where email = ? and type = ?",
+                Long.class, email, type);
+    }
 }

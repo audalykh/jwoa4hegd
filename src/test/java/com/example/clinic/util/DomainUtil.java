@@ -1,11 +1,14 @@
 package com.example.clinic.util;
 
+import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
 import com.example.clinic.model.ActionType;
 import com.example.clinic.model.Doctor;
+import com.example.clinic.model.EntityType;
 import com.example.clinic.model.Log;
 import com.example.clinic.model.Patient;
+import com.example.clinic.service.AppointmentService;
 import com.example.clinic.service.DoctorService;
 import com.example.clinic.service.LogService;
 import com.example.clinic.service.PatientService;
@@ -22,6 +25,9 @@ public class DomainUtil {
 
     @Autowired
     private DoctorService doctorService;
+
+    @Autowired
+    private AppointmentService appointmentService;
 
     @Autowired
     private LogService logService;
@@ -52,5 +58,15 @@ public class DomainUtil {
 
     public Log getLogByType(ActionType type) {
         return logService.getAll().stream().filter(log -> log.getActionType() == type).findFirst().orElse(null);
+    }
+
+    public Log getLogByTypes(ActionType type, EntityType entityType) {
+        return logService.getAll().stream()
+                .filter(log -> log.getActionType() == type && log.getEntityType() == entityType)
+                .findFirst().orElse(null);
+    }
+
+    public List<AppointmentDto> getAllAppointments() {
+        return appointmentService.getPage(Pageable.unpaged()).getContent();
     }
 }

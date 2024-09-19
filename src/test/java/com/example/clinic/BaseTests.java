@@ -1,5 +1,6 @@
 package com.example.clinic;
 
+import com.example.clinic.config.TestConfig;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.util.DbUtil;
@@ -10,10 +11,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@ContextConfiguration(classes = TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseTests {

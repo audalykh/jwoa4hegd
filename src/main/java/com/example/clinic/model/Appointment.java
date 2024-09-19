@@ -22,11 +22,13 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
 @Entity
 @Accessors(chain = true)
+@SQLRestriction("deleted = false")
 @SQLDelete(sql = "UPDATE appointment SET deleted = true WHERE id = ?")
 public class Appointment extends AuditableEntity implements Serializable {
 
