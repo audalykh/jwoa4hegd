@@ -2,6 +2,8 @@ package com.example.clinic;
 
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
+import com.example.clinic.model.ActionType;
+import com.example.clinic.model.EntityType;
 import com.example.clinic.model.Patient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
@@ -65,8 +67,14 @@ public class PatientTests extends BaseTests {
                 .matches(d -> d.getFullName().equals("Sam Smith"))
                 .matches(d -> d.getEmail().equals(dto.getEmail()))
                 .matches(d -> d.getCreatedAt() != null);
-
         assertThat(domainUtil.getAllPatients()).hasSize(3);
+
+        // Assert log entry has been created
+        var log = domainUtil.getLogByType(ActionType.CREATE);
+        assertThat(log)
+                .matches(l -> l.getEntityType() == EntityType.PATIENT)
+                .matches(l -> l.getEntityId().equals(patient.getId()))
+                .matches(l -> l.getActorId().equals(adminDoctor.getId()));
     }
 
     @Test
@@ -140,6 +148,13 @@ public class PatientTests extends BaseTests {
         assertThat(personDto)
                 .matches(d -> d.getFullName().equals("Shu Shoe"))
                 .matches(d -> d.getEmail().equals(dto.getEmail()));
+
+        // Assert log entry has been created
+        var log = domainUtil.getLogByType(ActionType.UPDATE);
+        assertThat(log)
+                .matches(l -> l.getEntityType() == EntityType.PATIENT)
+                .matches(l -> l.getEntityId().equals(personDto.getId()))
+                .matches(l -> l.getActorId().equals(adminDoctor.getId()));
     }
 
     @Test
@@ -157,6 +172,13 @@ public class PatientTests extends BaseTests {
 
         var deletedPatient = dbUtil.doSelect("select * from person where id = " + patient.getId());
         assertThat(deletedPatient).hasSize(1).matches(d -> d.get(0).get("DELETED").equals(true));
+
+        // Assert log entry has been created
+        var log = domainUtil.getLogByType(ActionType.DELETE);
+        assertThat(log)
+                .matches(l -> l.getEntityType() == EntityType.PATIENT)
+                .matches(l -> l.getEntityId().equals(patient.getId()))
+                .matches(l -> l.getActorId().equals(adminDoctor.getId()));
     }
 
     @Test

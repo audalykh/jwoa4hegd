@@ -2,7 +2,9 @@ package com.example.clinic;
 
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
+import com.example.clinic.model.ActionType;
 import com.example.clinic.model.Doctor;
+import com.example.clinic.model.EntityType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,8 +67,14 @@ public class DoctorTests extends BaseTests {
                 .matches(d -> d.getFullName().equals("Sam Smith"))
                 .matches(d -> d.getEmail().equals(dto.getEmail()))
                 .matches(d -> d.getCreatedAt() != null);
-
         assertThat(domainUtil.getAllDoctors()).hasSize(3);
+
+        // Assert log entry has been created
+        var log = domainUtil.getLogByType(ActionType.CREATE);
+        assertThat(log)
+                .matches(l -> l.getEntityType() == EntityType.DOCTOR)
+                .matches(l -> l.getEntityId().equals(doctor.getId()))
+                .matches(l -> l.getActorId().equals(adminDoctor.getId()));
     }
 
     @Test
@@ -141,6 +149,13 @@ public class DoctorTests extends BaseTests {
         assertThat(doctor)
                 .matches(d -> d.getFullName().equals("Shu Shoe"))
                 .matches(d -> d.getEmail().equals(dto.getEmail()));
+
+        // Assert log entry has been created
+        var log = domainUtil.getLogByType(ActionType.UPDATE);
+        assertThat(log)
+                .matches(l -> l.getEntityType() == EntityType.DOCTOR)
+                .matches(l -> l.getEntityId().equals(doctor.getId()))
+                .matches(l -> l.getActorId().equals(adminDoctor.getId()));
     }
 
     @Test
@@ -158,6 +173,13 @@ public class DoctorTests extends BaseTests {
 
         var deletedDoctor = dbUtil.doSelect("select * from person where id = " + doctor.getId());
         assertThat(deletedDoctor).hasSize(1).matches(d -> d.get(0).get("DELETED").equals(true));
+
+        // Assert log entry has been created
+        var log = domainUtil.getLogByType(ActionType.DELETE);
+        assertThat(log)
+                .matches(l -> l.getEntityType() == EntityType.DOCTOR)
+                .matches(l -> l.getEntityId().equals(doctor.getId()))
+                .matches(l -> l.getActorId().equals(adminDoctor.getId()));
     }
 
     private PersonDto createDoctor(PersonBaseDto dto) throws Exception {

@@ -1,7 +1,7 @@
 package com.example.clinic;
 
 import com.example.clinic.dto.PersonBaseDto;
-import com.example.clinic.service.LogService;
+import com.example.clinic.model.Doctor;
 import com.example.clinic.util.DbUtil;
 import com.example.clinic.util.DomainUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,11 +27,10 @@ public abstract class BaseTests {
     protected PersonBaseDto dummyPatient;
     protected PersonBaseDto dummyDoctor;
 
-    @Autowired
-    protected MockMvc mockMvc;
+    protected Doctor adminDoctor;
 
     @Autowired
-    protected LogService logService;
+    protected MockMvc mockMvc;
 
     @Autowired
     protected DbUtil dbUtil;
@@ -43,5 +42,6 @@ public abstract class BaseTests {
     protected void baseSetup() {
         dummyPatient = new PersonBaseDto("Bob", "Bee", PATIENT_EMAIL, "12345678");
         dummyDoctor = new PersonBaseDto("Donny", "Doe", "alice.doe@email.com", "12345678");
+        adminDoctor = domainUtil.getDoctorByEmail(ADMIN_EMAIL);
     }
 }

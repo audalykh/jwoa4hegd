@@ -21,7 +21,6 @@ public class AuthTests extends BaseTests {
     @Autowired
     private InitDataConfiguration initDataConfiguration;
 
-
     @Test
     void shouldSignInAsExistingDoctor() throws Exception {
         // Arrange & Act
@@ -44,7 +43,7 @@ public class AuthTests extends BaseTests {
         // Assert
         var person = jwtAuthenticationDto.getPerson();
 
-        var logs = logService.getAll();
+        var logs = domainUtil.getAllLogs();
         assertThat(logs).hasSize(1);
 
         assertThat(logs.get(0))
@@ -86,7 +85,7 @@ public class AuthTests extends BaseTests {
 
         // Assert
         var person = jwtAuthenticationDto.getPerson();
-        var logs = logService.getAll();
+        var logs = domainUtil.getAllLogs();
         assertThat(logs).hasSize(1);
 
         assertThat(logs.get(0))
