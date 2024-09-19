@@ -7,38 +7,26 @@ import com.example.clinic.exception.PersonAlreadyExistException;
 import com.example.clinic.mapper.PersonMapper;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.repository.DoctorRepository;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service("doctorService")
-@RequiredArgsConstructor
-public class DoctorService {
+public class DoctorService extends BasePersonService<Doctor, DoctorRepository> {
 
-    private final DoctorRepository doctorRepository;
-    private final PersonMapper personMapper;
-
-    @Transactional(readOnly = true)
-    public Page<Doctor> getPage(Pageable pageable) {
-        return doctorRepository.findAll(
-                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("lastName", "firstName")));
+    public DoctorService(DoctorRepository repository, PersonMapper personMapper) {
+        super(repository, personMapper);
     }
 
     @Transactional
     public PersonDto create(PersonBaseDto dto) throws PersonAlreadyExistException {
-        if (doctorRepository.existsByEmail(dto.getEmail())) {
-            throw new PersonAlreadyExistException("Doctor with email " + dto.getEmail() + " already exists");
+        if (repository.existsByEmail(dto.getEmail())) {
+            throw new PersonAlreadyExistException("Doctor with email <" + dto.getEmail() + "> already exists");
         } else {
             // Save and refresh the entity to get the created date
-            var doctor = doctorRepository.saveAndRefresh(personMapper.toDoctorEntity(dto));
+            var doctor = repository.saveAndRefresh(personMapper.toDoctorEntity(dto));
             return personMapper.toDto(doctor);
         }
     }
@@ -47,13 +35,8 @@ public class DoctorService {
      * Creates a new doctor or throws an exception if the doctor already exists.
      */
     @Transactional
-    public void createOrThrow(PersonBaseDto dto) {
-        doctorRepository.save(personMapper.toDoctorEntity(dto));
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Doctor> findByEmail(String email) {
-        return doctorRepository.findDoctorByEmail(email);
+    public Doctor createOrThrow(PersonBaseDto dto) {
+        return repository.save(personMapper.toDoctorEntity(dto));
     }
 
     @Transactional(readOnly = true)
@@ -65,19 +48,14 @@ public class DoctorService {
 
     @Transactional(readOnly = true)
     public PersonDto getById(Long id) {
-        return doctorRepository.findById(id)
+        return repository.findById(id)
                 .map(personMapper::toDto)
                 .orElseThrow(() -> new DomainObjectNotFoundException("Doctor not found for id: " + id));
     }
 
     @Transactional
-    public void delete(Long id) {
-        doctorRepository.deleteById(id);
-    }
-
-    @Transactional
     public PersonDto update(Long id, PersonBaseDto dto) {
-        var doctor = doctorRepository.findById(id)
+        var doctor = repository.findById(id)
                 .orElseThrow(() -> new DomainObjectNotFoundException("Doctor not found for id: " + id));
         return personMapper.toDto(personMapper.toEntity(dto, doctor));
     }

@@ -1,5 +1,6 @@
 package com.example.clinic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -68,6 +69,7 @@ public abstract class Person implements Serializable {
     @Column
     private boolean deleted;
 
+    @JsonIgnore
     public String getFullName() {
         return firstName + " " + lastName;
     }

@@ -19,25 +19,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class ClinicIntegrationTests extends BaseIntegrationTests {
+class ClinicTests extends BaseTests {
 
     @Autowired
     private ResourceLoader resourceLoader;
 
-	@Test
-	@WithMockUser(username = "adminDoctor", roles = DOCTOR)
-	public void shouldGetExistingClinicByDoctor() throws Exception {
-		// Act
-		var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/clinic")
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
+    @Test
+    @WithMockUser(username = "adminDoctor", roles = DOCTOR)
+    public void shouldGetExistingClinicByDoctor() throws Exception {
+        // Act
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/clinic")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
 
-		// Assert
+        // Assert
         var clinic = fromJsonString(mvcResult, ClinicDto.class);
         assertThat(clinic.getName()).isEqualTo("Achme Clinic");
         assertThat(clinic.getLogo().getName()).isEqualTo("clinic-logo.png");
-	}
+    }
 
     @Test
     @WithMockUser(username = "bob", roles = PATIENT)
@@ -132,14 +132,14 @@ class ClinicIntegrationTests extends BaseIntegrationTests {
     }
 
     private void assertClientFields(MvcResult mvcResult) {
-        var clinic = fromJsonString(mvcResult, ClinicDto.class);
-        assertThat(clinic.getName()).isEqualTo("New Clinic");
-        assertThat(clinic.getEmail()).isEqualTo("new.mail@email.com");
-        assertThat(clinic.getPhone()).isEqualTo("987654321");
-        assertThat(clinic.getFromHour()).isEqualTo(11);
-        assertThat(clinic.getToHour()).isEqualTo(16);
-        assertThat(clinic.getLogo().getName()).isEqualTo("new-logo.png");
-        assertThat(clinic.getLogo().getType()).isEqualTo("image/png");
+        assertThat(fromJsonString(mvcResult, ClinicDto.class))
+                .matches(clinic -> clinic.getName().equals("New Clinic"))
+                .matches(clinic -> clinic.getEmail().equals("new.mail@email.com"))
+                .matches(clinic -> clinic.getPhone().equals("987654321"))
+                .matches(clinic -> clinic.getFromHour().equals(11))
+                .matches(clinic -> clinic.getToHour().equals(16))
+                .matches(clinic -> clinic.getLogo().getName().equals("new-logo.png"))
+                .matches(clinic -> clinic.getLogo().getType().equals("image/png"));
     }
 
     private MockMultipartFile buildMockMultipartFile() throws Exception {
@@ -147,5 +147,5 @@ class ClinicIntegrationTests extends BaseIntegrationTests {
         try (var in = logoResource.getInputStream()) {
             return new MockMultipartFile("logo", "new-logo.png", "image/png", in);
         }
-	}
+    }
 }

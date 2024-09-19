@@ -28,10 +28,10 @@ security:
     expiration-time-minutes: 1440 # 24 hours
 init-data:
   admin-doctor:
-    email: admin@test.com
+    email: admin@achme.com
     password: 12345
-    firstName: admin
-    lastName: admin
+    firstName: Admin
+    lastName: Admin
   clinic-default:
     auto-create: true
     name: 'Achme Clinic'

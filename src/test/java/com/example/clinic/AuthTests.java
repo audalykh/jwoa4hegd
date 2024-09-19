@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class AuthIntegrationTests extends BaseIntegrationTests {
+public class AuthTests extends BaseTests {
 
     @Autowired
     private InitDataConfiguration initDataConfiguration;
@@ -27,13 +27,13 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
         // Arrange & Act
         var jwtAuthenticationDto = loginAsDoctor();
 
-        var person = jwtAuthenticationDto.getPerson();
         var admin = initDataConfiguration.getAdminDoctor();
 
         assertThat(jwtAuthenticationDto.getJwt()).isNotNull();
-        assertThat(person.getEmail()).isEqualTo(admin.getEmail());
-        assertThat(person.getLastLoginAt()).isNotNull();
-        assertThat(person.getCreatedAt()).isNotNull();
+        assertThat(jwtAuthenticationDto.getPerson())
+                .matches(person -> person.getEmail().equals(admin.getEmail()))
+                .matches(person -> person.getLastLoginAt() != null)
+                .matches(person -> person.getCreatedAt() != null);
     }
 
     @Test
@@ -47,27 +47,11 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
         var logs = logService.getAll();
         assertThat(logs).hasSize(1);
 
-        var log = logs.get(0);
-        assertThat(log.getActionType()).isEqualTo(ActionType.LOG_IN);
-        assertThat(log.getEntityType()).isEqualTo(EntityType.DOCTOR);
-        assertThat(log.getEntityId()).isEqualTo(person.getId());
-        assertThat(log.getActorId()).isEqualTo(person.getId());
-    }
-
-    private JwtAuthenticationDto loginAsDoctor() throws Exception {
-        // Arrange
-        var admin = initDataConfiguration.getAdminDoctor();
-        var signInDto = new SignInDto().setEmail(admin.getEmail()).setPassword(admin.getPassword());
-
-        // Act
-        var mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/sign-in/doctor")
-                        .content(asJsonString(signInDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return fromJsonString(mvcResult, JwtAuthenticationDto.class);
+        assertThat(logs.get(0))
+                .matches(log -> log.getActionType() == ActionType.LOG_IN)
+                .matches(log -> log.getEntityType() == EntityType.DOCTOR)
+                .matches(log -> log.getEntityId().equals(person.getId()))
+                .matches(log -> log.getActorId().equals(person.getId()));
     }
 
     @Test
@@ -105,16 +89,32 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
         var logs = logService.getAll();
         assertThat(logs).hasSize(1);
 
-        var log = logs.get(0);
-        assertThat(log.getActionType()).isEqualTo(ActionType.LOG_IN);
-        assertThat(log.getEntityType()).isEqualTo(EntityType.PATIENT);
-        assertThat(log.getEntityId()).isEqualTo(person.getId());
-        assertThat(log.getActorId()).isEqualTo(person.getId());
+        assertThat(logs.get(0))
+                .matches(log -> log.getActionType() == ActionType.LOG_IN)
+                .matches(log -> log.getEntityType() == EntityType.PATIENT)
+                .matches(log -> log.getEntityId().equals(person.getId()))
+                .matches(log -> log.getActorId().equals(person.getId()));
+    }
+
+    private JwtAuthenticationDto loginAsDoctor() throws Exception {
+        // Arrange
+        var admin = initDataConfiguration.getAdminDoctor();
+        var signInDto = new SignInDto().setEmail(admin.getEmail()).setPassword(admin.getPassword());
+
+        // Act
+        var mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/sign-in/doctor")
+                        .content(asJsonString(signInDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        return fromJsonString(mvcResult, JwtAuthenticationDto.class);
     }
 
     private JwtAuthenticationDto loginAsPatient() throws Exception {
         // Arrange
-        var patient = createPatient();
+        var patient = domainUtil.createPatient(dummyPatient);
 
         var signInDto = new SignInDto().setEmail(patient.getEmail()).setPassword(dummyPatient.getPassword());
 
