@@ -8,8 +8,10 @@ import com.example.clinic.model.EntityType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -57,9 +59,22 @@ public class AuthControllerTests extends BaseControllerTests {
 
         // Act & Assert
         var mvcResult = doMvcRequest(signInDto, HttpMethod.POST,
-                "/api/auth/sign-in/doctor", status().isInternalServerError()); // TODO: fix the status
+                "/api/auth/sign-in/doctor", status().isUnauthorized());
 
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Bad credentials");
+    }
+
+    @Test
+    public void shouldFailOnGetResourceWithExpiredToken() throws Exception {
+        // Act & Assert
+        var mvcResult = mockMvc.perform(get("/api/clinic")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer 12345678")
+                )
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getErrorMessage()).contains("JTW Token has expired or invalid");
     }
 
     @Test

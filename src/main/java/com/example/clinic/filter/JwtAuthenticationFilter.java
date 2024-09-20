@@ -4,6 +4,7 @@ import com.example.clinic.security.CustomUsernamePasswordAuthenticationToken;
 import com.example.clinic.service.DoctorService;
 import com.example.clinic.service.JwtService;
 import com.example.clinic.service.PatientService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +45,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        try {
+            extractJwtToken(authHeader, request);
+            filterChain.doFilter(request, response);
+        } catch (JwtException jwtException) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "JTW Token has expired or invalid");
+        }
+    }
+
+    private void extractJwtToken(String authHeader, HttpServletRequest request) {
         var jwt = authHeader.substring(BEARER_PREFIX.length());
         var username = jwtService.extractUserName(jwt);
 
@@ -70,6 +80,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(context);
             }
         }
-        filterChain.doFilter(request, response);
     }
 }
