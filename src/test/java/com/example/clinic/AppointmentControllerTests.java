@@ -196,6 +196,6 @@ public class AppointmentControllerTests extends BaseControllerTests {
     }
 
     private AppointmentDto createAppointment(AppointmentCreateDto dto) throws Exception {
-        return doRequest(dto, HttpMethod.POST, "/api/appointments", AppointmentDto.class, status().isCreated());
+        return doCreate(dto, HttpMethod.POST, "/api/appointments", AppointmentDto.class);
     }
 }

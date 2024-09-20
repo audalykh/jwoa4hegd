@@ -7,18 +7,15 @@ import com.example.clinic.model.Doctor;
 import com.example.clinic.model.EntityType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.example.clinic.BaseControllerTests.ADMIN_EMAIL;
 import static com.example.clinic.BaseControllerTests.DOCTOR;
-import static com.example.clinic.util.TestUtil.asJsonString;
-import static com.example.clinic.util.TestUtil.fromJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
@@ -84,12 +81,7 @@ public class DoctorControllerTests extends BaseControllerTests {
         var dto = new PersonBaseDto("Alice", "Doe", "alice.doe@email.com", "12345678");
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/doctors")
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        var mvcResult = doMvcRequest(dto, HttpMethod.POST, "/api/doctors", status().isBadRequest());
 
         // Assert
         assertThat(mvcResult.getResponse().getContentAsString())
@@ -114,16 +106,10 @@ public class DoctorControllerTests extends BaseControllerTests {
     public void shouldGetDoctorById() throws Exception {
 
         // Arrange & Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/doctors/" + doctor.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        var doctor = fromJsonString(mvcResult, PersonDto.class);
+        var doctorDto = doGetRequest("/api/doctors/" + doctor.getId(), new TypeReference<PersonDto>() { });
 
         // Assert
-        assertThat(doctor)
+        assertThat(doctorDto)
                 .matches(d -> d.getFullName().equals("Donny Doe"))
                 .matches(d -> d.getEmail().equals(dummyDoctor.getEmail()))
                 .matches(d -> d.getPassword() == null);     // password is not exposed
@@ -136,17 +122,11 @@ public class DoctorControllerTests extends BaseControllerTests {
         var dto = new PersonBaseDto("Shu", "Shoe", "shu.shoe@email.com", "1234567");
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/doctors/" + doctor.getId())
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+        var doctorDto = doRequest(dto, HttpMethod.PUT, "/api/doctors/" + doctor.getId(), PersonDto.class);
 
         // Assert
-        var doctor = fromJsonString(mvcResult, PersonDto.class);
         assertThat(domainUtil.getAllDoctors()).hasSize(2);      // no new doctor created
-        assertThat(doctor)
+        assertThat(doctorDto)
                 .matches(d -> d.getFullName().equals("Shu Shoe"))
                 .matches(d -> d.getEmail().equals(dto.getEmail()));
 
@@ -164,9 +144,7 @@ public class DoctorControllerTests extends BaseControllerTests {
         assertThat(domainUtil.getAllDoctors()).hasSize(2);
 
         // Act
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/doctors/" + doctor.getId()))
-                .andExpect(status().isNoContent())
-                .andReturn();
+        doDelete("/api/doctors/" + doctor.getId());
 
         // Assert
         assertThat(domainUtil.getAllDoctors()).hasSize(1);
@@ -183,25 +161,12 @@ public class DoctorControllerTests extends BaseControllerTests {
     }
 
     private PersonDto createDoctor(PersonBaseDto dto) throws Exception {
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/doctors")
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return fromJsonString(mvcResult, PersonDto.class);
+        return doCreate(dto, HttpMethod.POST, "/api/doctors", PersonDto.class);
     }
 
     private List<PersonDto> fetchDoctors(int page, int size) throws Exception {
-        var mvcResult = mockMvc.perform(get("/api/doctors")
-                        .param("page", String.valueOf(page))
-                        .param("size", String.valueOf(size))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return fromJsonString(mvcResult, new TypeReference<>() {
-        });
+        return doGetRequest("/api/doctors",
+                Map.of("page", String.valueOf(page), "size", String.valueOf(size)),
+                new TypeReference<>() { });
     }
 }

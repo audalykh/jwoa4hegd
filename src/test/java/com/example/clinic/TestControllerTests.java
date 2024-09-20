@@ -179,7 +179,7 @@ public class TestControllerTests extends BaseControllerTests {
     }
 
     private TestDto createTest(TestDto dto) throws Exception {
-        return doRequest(dto, HttpMethod.POST, "/api/tests", TestDto.class, status().isCreated());
+        return doCreate(dto, HttpMethod.POST, "/api/tests", TestDto.class);
     }
 
     private TestDto updateTest(TestDto dto) throws Exception {

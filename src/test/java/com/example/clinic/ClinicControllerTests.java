@@ -1,15 +1,16 @@
 package com.example.clinic;
 
 import com.example.clinic.dto.ClinicDto;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -28,13 +29,9 @@ class ClinicControllerTests extends BaseControllerTests {
     @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
     public void shouldGetExistingClinicByDoctor() throws Exception {
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/clinic")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+        ClinicDto clinic = doGetRequest("/api/clinic", new TypeReference<>() { });
 
         // Assert
-        var clinic = fromJsonString(mvcResult, ClinicDto.class);
         assertThat(clinic.getName()).isEqualTo("Achme Clinic");
         assertThat(clinic.getLogo().getName()).isEqualTo("clinic-logo.png");
     }
@@ -43,13 +40,10 @@ class ClinicControllerTests extends BaseControllerTests {
     @WithMockUser(username = "bob", roles = PATIENT)
     public void shouldGetExistingClinicByPatient() throws Exception {
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/clinic")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+        ClinicDto dto = doGetRequest("/api/clinic", new TypeReference<>() { });
 
         // Assert
-        assertThat(fromJsonString(mvcResult, ClinicDto.class)).isNotNull();
+        assertThat(dto).isNotNull();
     }
 
     @Test
@@ -61,11 +55,7 @@ class ClinicControllerTests extends BaseControllerTests {
         MultiValueMap<String, String> multiValueMap = buildClinicRequestMap();
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/api/clinic")
-                        .file(file)
-                        .params(multiValueMap))
-                .andExpect(status().isOk())
-                .andReturn();
+        var mvcResult = doMultiPartRequest(HttpMethod.PUT, file, multiValueMap, status().isOk());
 
         // Assert
         assertClientFields(mvcResult);
@@ -76,21 +66,14 @@ class ClinicControllerTests extends BaseControllerTests {
     public void shouldCreateNewClinic() throws Exception {
 
         // Arrange: delete the only clinic
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/clinic")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent())
-                .andReturn();
+        doDelete("/api/clinic");
         assertClinicsCount(0);
 
         MockMultipartFile file = buildMockMultipartFile();
         MultiValueMap<String, String> multiValueMap = buildClinicRequestMap();
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, "/api/clinic")
-                        .file(file)
-                        .params(multiValueMap))
-                .andExpect(status().isOk())
-                .andReturn();
+        var mvcResult = doMultiPartRequest(HttpMethod.POST, file, multiValueMap, status().isCreated());
 
         // Assert
         assertClientFields(mvcResult);
@@ -106,14 +89,19 @@ class ClinicControllerTests extends BaseControllerTests {
         MultiValueMap<String, String> multiValueMap = buildClinicRequestMap();
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, "/api/clinic")
-                        .file(file)
-                        .params(multiValueMap))
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        var mvcResult = doMultiPartRequest(HttpMethod.POST, file, multiValueMap, status().isBadRequest());
 
         // Assert
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Clinic already exist");
+    }
+
+    private MvcResult doMultiPartRequest(HttpMethod method, MockMultipartFile file,
+            MultiValueMap<String, String> multiValueMap, ResultMatcher resultMatcher) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.multipart(method, "/api/clinic")
+                        .file(file)
+                        .params(multiValueMap))
+                .andExpect(resultMatcher)
+                .andReturn();
     }
 
     private void assertClinicsCount(int size) {

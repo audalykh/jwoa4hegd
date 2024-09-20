@@ -6,18 +6,15 @@ import com.example.clinic.model.ActionType;
 import com.example.clinic.model.EntityType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.example.clinic.BaseControllerTests.ADMIN_EMAIL;
 import static com.example.clinic.BaseControllerTests.DOCTOR;
-import static com.example.clinic.util.TestUtil.asJsonString;
-import static com.example.clinic.util.TestUtil.fromJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
@@ -78,12 +75,7 @@ public class PatientControllerTests extends BaseControllerTests {
     public void shouldForbidCreatingPatientWithSameEmail() throws Exception {
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/patients")
-                        .content(asJsonString(dummyPatient))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        var mvcResult = doMvcRequest(dummyPatient, HttpMethod.POST, "/api/patients", status().isBadRequest());
 
         // Assert
         assertThat(mvcResult.getResponse().getContentAsString())
@@ -111,12 +103,7 @@ public class PatientControllerTests extends BaseControllerTests {
     public void shouldGetPatientById() throws Exception {
 
         // Arrange & Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/patients/" + patient.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-        var patientDto = fromJsonString(mvcResult, PersonDto.class);
+        var patientDto = doGetRequest("/api/patients/" + patient.getId(), new TypeReference<PersonDto>() { });
 
         // Assert
         assertThat(patientDto)
@@ -132,15 +119,9 @@ public class PatientControllerTests extends BaseControllerTests {
         var dto = new PersonBaseDto("Shu", "Shoe", "shu.shoe@email.com", "1234567");
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/patients/" + patient.getId())
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
+        var personDto = doRequest(dto, HttpMethod.PUT, "/api/patients/" + patient.getId(), PersonDto.class);
 
         // Assert
-        var personDto = fromJsonString(mvcResult, PersonDto.class);
         assertThat(domainUtil.getAllPatients()).hasSize(2);      // no new patient created
         assertThat(personDto)
                 .matches(d -> d.getFullName().equals("Shu Shoe"))
@@ -160,9 +141,7 @@ public class PatientControllerTests extends BaseControllerTests {
         assertThat(domainUtil.getAllPatients()).hasSize(2);
 
         // Act
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/patients/" + patient.getId()))
-                .andExpect(status().isNoContent())
-                .andReturn();
+        doDelete("/api/patients/" + patient.getId());
 
         // Assert
         assertThat(domainUtil.getAllPatients()).hasSize(1);
@@ -181,15 +160,10 @@ public class PatientControllerTests extends BaseControllerTests {
     @Test
     @WithMockUser(username = PATIENT_EMAIL, roles = PATIENT)
     public void shouldGetCurrentPatientData() throws Exception {
+        // Act
+        var patientDto = doGetRequest("/api/patients/current", new TypeReference<PersonBaseDto>() { });
 
-        // Arrange & Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/patients/current")
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
         // Assert
-        var patientDto = fromJsonString(mvcResult, PersonBaseDto.class);
         assertThat(patientDto)
                 .matches(d -> d.getFullName().equals(dummyPatient.getFullName()))
                 .matches(d -> d.getEmail().equals(dummyPatient.getEmail()))
@@ -197,25 +171,12 @@ public class PatientControllerTests extends BaseControllerTests {
     }
 
     private PersonDto createPatient(PersonBaseDto dto) throws Exception {
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/patients")
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        return fromJsonString(mvcResult, PersonDto.class);
+        return doCreate(dto, HttpMethod.POST, "/api/patients", PersonDto.class);
     }
 
     private List<PersonDto> fetchPatients(int page, int size) throws Exception {
-        var mvcResult = mockMvc.perform(get("/api/patients")
-                        .param("page", String.valueOf(page))
-                        .param("size", String.valueOf(size))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return fromJsonString(mvcResult, new TypeReference<>() {
-        });
+        return doGetRequest("/api/patients",
+                Map.of("page", String.valueOf(page), "size", String.valueOf(size)),
+                new TypeReference<>() { });
     }
 }

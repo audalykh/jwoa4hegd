@@ -68,6 +68,10 @@ public abstract class BaseControllerTests {
         return doRequest(dto, method, url, clazz, status().isOk());
     }
 
+    protected <T> T doCreate(Object dto, HttpMethod method, String url, Class<T> clazz) throws Exception {
+        return doRequest(dto, method, url, clazz, status().isCreated());
+    }
+
     protected <T> T doRequest(Object dto, HttpMethod method, String url, Class<T> clazz,
                               ResultMatcher resultMatcher) throws Exception {
         var mvcResult = doMvcRequest(dto, method, url, resultMatcher);
