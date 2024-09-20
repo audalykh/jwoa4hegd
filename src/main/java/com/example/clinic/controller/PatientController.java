@@ -39,6 +39,7 @@ public class PatientController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PersonDto create(@RequestBody @Valid PersonBaseDto dto) throws PersonAlreadyExistException {
         return patientService.create(dto);
     }

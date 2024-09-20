@@ -3,6 +3,7 @@ package com.example.clinic.util;
 import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
+import com.example.clinic.dto.TestDto;
 import com.example.clinic.model.ActionType;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.model.EntityType;
@@ -12,6 +13,7 @@ import com.example.clinic.service.AppointmentService;
 import com.example.clinic.service.DoctorService;
 import com.example.clinic.service.LogService;
 import com.example.clinic.service.PatientService;
+import com.example.clinic.service.TestService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,9 @@ public class DomainUtil {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private TestService testService;
 
     @Autowired
     private LogService logService;
@@ -68,5 +73,13 @@ public class DomainUtil {
 
     public List<AppointmentDto> getAllAppointments() {
         return appointmentService.getPage(Pageable.unpaged()).getContent();
+    }
+
+    public List<TestDto> getPatientTests(Patient patient) {
+        return testService.getPatientTests(patient);
+    }
+
+    public List<TestDto> getAllTests() {
+        return testService.getAllTests();
     }
 }

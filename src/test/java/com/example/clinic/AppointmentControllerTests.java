@@ -6,7 +6,6 @@ import com.example.clinic.dto.AppointmentRequestDto;
 import com.example.clinic.model.ActionType;
 import com.example.clinic.model.AppointmentStatus;
 import com.example.clinic.model.EntityType;
-import com.example.clinic.model.Patient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,8 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.example.clinic.BaseTests.ADMIN_EMAIL;
-import static com.example.clinic.BaseTests.DOCTOR;
+import static com.example.clinic.BaseControllerTests.ADMIN_EMAIL;
+import static com.example.clinic.BaseControllerTests.DOCTOR;
 import static com.example.clinic.util.TestUtil.asJsonString;
 import static com.example.clinic.util.TestUtil.fromJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,9 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
-public class AppointmentTests extends BaseTests {
+public class AppointmentControllerTests extends BaseControllerTests {
 
-    private Patient patient;
     private AppointmentDto appointment;
 
     @BeforeEach

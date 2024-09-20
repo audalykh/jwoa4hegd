@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class AuthTests extends BaseTests {
+public class AuthControllerTests extends BaseControllerTests {
 
     @Autowired
     private InitDataConfiguration initDataConfiguration;

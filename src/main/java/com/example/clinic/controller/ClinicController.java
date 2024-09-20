@@ -31,6 +31,7 @@ public class ClinicController {
     private final ClinicService clinicService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ClinicDto create(@Valid ClinicBaseDto clinicDto,
                             @RequestPart("logo") MultipartFile logoFile) throws IOException {
         return clinicService.create(clinicDto, LogoResourceDto.of(logoFile));

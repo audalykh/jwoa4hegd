@@ -13,8 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.example.clinic.BaseTests.ADMIN_EMAIL;
-import static com.example.clinic.BaseTests.DOCTOR;
+import static com.example.clinic.BaseControllerTests.ADMIN_EMAIL;
+import static com.example.clinic.BaseControllerTests.DOCTOR;
 import static com.example.clinic.util.TestUtil.asJsonString;
 import static com.example.clinic.util.TestUtil.fromJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
-public class DoctorTests extends BaseTests {
+public class DoctorControllerTests extends BaseControllerTests {
 
     private Doctor doctor;
 

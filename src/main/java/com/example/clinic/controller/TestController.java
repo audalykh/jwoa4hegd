@@ -1,7 +1,6 @@
 package com.example.clinic.controller;
 
 import com.example.clinic.dto.ReportDto;
-import com.example.clinic.dto.TestBaseDto;
 import com.example.clinic.dto.TestCreateDto;
 import com.example.clinic.dto.TestDto;
 import com.example.clinic.model.Patient;
@@ -46,13 +45,13 @@ public class TestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid TestCreateDto dto) {
-        testService.create(dto);
+    public TestDto create(@RequestBody @Valid TestCreateDto dto) {
+        return testService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody @Valid TestBaseDto dto) {
-        testService.update(id, dto);
+    public TestDto update(@PathVariable Long id, @RequestBody @Valid TestDto dto) {
+        return testService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

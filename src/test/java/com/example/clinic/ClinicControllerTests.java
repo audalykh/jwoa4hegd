@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class ClinicTests extends BaseTests {
+class ClinicControllerTests extends BaseControllerTests {
 
     @Autowired
     private ResourceLoader resourceLoader;

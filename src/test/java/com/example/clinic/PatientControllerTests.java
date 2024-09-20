@@ -4,7 +4,6 @@ import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
 import com.example.clinic.model.ActionType;
 import com.example.clinic.model.EntityType;
-import com.example.clinic.model.Patient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.example.clinic.BaseTests.ADMIN_EMAIL;
-import static com.example.clinic.BaseTests.DOCTOR;
+import static com.example.clinic.BaseControllerTests.ADMIN_EMAIL;
+import static com.example.clinic.BaseControllerTests.DOCTOR;
 import static com.example.clinic.util.TestUtil.asJsonString;
 import static com.example.clinic.util.TestUtil.fromJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,9 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
-public class PatientTests extends BaseTests {
-
-    private Patient patient;
+public class PatientControllerTests extends BaseControllerTests {
 
     @BeforeEach
     public void setUp() {
@@ -204,7 +201,7 @@ public class PatientTests extends BaseTests {
                         .content(asJsonString(dto))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         return fromJsonString(mvcResult, PersonDto.class);
