@@ -39,7 +39,9 @@ public class PatientController {
     }
 
     /**
-     * Creates a new patient using the given dto.
+     * Creates a new patient using the given dto. The password of the patient is NOT returned back for security reasons;
+     * the doctor creating a patient is supposed to write down the patient password before creation.
+     * <p/>
      * @throws PersonAlreadyExistException if a patient with the same email already exists
      */
     @PostMapping
