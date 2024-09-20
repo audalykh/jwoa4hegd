@@ -10,18 +10,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.example.clinic.BaseControllerTests.ADMIN_EMAIL;
 import static com.example.clinic.BaseControllerTests.DOCTOR;
-import static com.example.clinic.util.TestUtil.asJsonString;
-import static com.example.clinic.util.TestUtil.fromJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
@@ -79,12 +76,8 @@ public class AppointmentControllerTests extends BaseControllerTests {
         var dto = new AppointmentCreateDto(patient.getId()).setRevisitDateTime(invalidRevisitDateTime);
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/appointments")
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        var mvcResult = doMvcRequest(dto, HttpMethod.POST,
+                "/api/appointments", status().isBadRequest());
 
         // Assert
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Invalid revisit time");
@@ -94,16 +87,11 @@ public class AppointmentControllerTests extends BaseControllerTests {
     public void shouldGetAppointmentById() throws Exception {
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/appointments/" + appointment.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        var appointment = fromJsonString(mvcResult, AppointmentDto.class);
+        var appointmentDto = doGetRequest("/api/appointments/" + appointment.getId(),
+                new TypeReference<AppointmentDto>() { });
 
         // Assert
-        assertThat(appointment)
+        assertThat(appointmentDto)
                 .matches(a -> a.getPatient().getId() == patient.getId())
                 .matches(a -> a.getCreatedBy().getId() == adminDoctor.getId())
                 .matches(a -> a.getStatus() == AppointmentStatus.NEW)
@@ -145,12 +133,8 @@ public class AppointmentControllerTests extends BaseControllerTests {
         assertThat(domainUtil.getAllLogs()).hasSize(2);
 
         // Act
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/appointments/" + appointmentDto.getId())
-                        .content(asJsonString(dto.setStatus(AppointmentStatus.NEW)))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        var mvcResult = doMvcRequest(dto.setStatus(AppointmentStatus.NEW), HttpMethod.PUT,
+                "/api/appointments/" + appointmentDto.getId(), status().isBadRequest());
 
         // Assert
         assertThat(mvcResult.getResponse().getContentAsString())
@@ -167,9 +151,7 @@ public class AppointmentControllerTests extends BaseControllerTests {
         assertThat(domainUtil.getAllAppointments()).hasSize(1);
 
         // Act
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/appointments/" + appointment.getId()))
-                .andExpect(status().isNoContent())
-                .andReturn();
+        doDelete("/api/appointments/" + appointment.getId());
 
         // Assert
         assertThat(domainUtil.getAllAppointments()).hasSize(0);
@@ -192,9 +174,7 @@ public class AppointmentControllerTests extends BaseControllerTests {
         assertThat(domainUtil.getAllAppointments()).hasSize(1);
 
         // Act
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/patients/" + patient.getId()))
-                .andExpect(status().isNoContent())
-                .andReturn();
+        doDelete("/api/patients/" + patient.getId());
 
         // Assert
         assertThat(domainUtil.getAllAppointments()).isEmpty();
@@ -205,34 +185,17 @@ public class AppointmentControllerTests extends BaseControllerTests {
     }
 
     private List<AppointmentDto> fetchAppointments(int page, int size) throws Exception {
-        var mvcResult = mockMvc.perform(get("/api/appointments")
-                        .param("page", String.valueOf(page))
-                        .param("size", String.valueOf(size))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return fromJsonString(mvcResult, new TypeReference<>() {
-        });
+        return doGetRequest("/api/appointments",
+                Map.of("page", String.valueOf(page), "size", String.valueOf(size)),
+                new TypeReference<>() {
+                });
     }
 
     private AppointmentDto updateAppointment(AppointmentRequestDto dto, long id) throws Exception {
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/appointments/" + id)
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-        return fromJsonString(mvcResult, AppointmentDto.class);
+        return doRequest(dto, HttpMethod.PUT, "/api/appointments/" + id, AppointmentDto.class);
     }
 
     private AppointmentDto createAppointment(AppointmentCreateDto dto) throws Exception {
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/appointments")
-                        .content(asJsonString(dto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-        return fromJsonString(mvcResult, AppointmentDto.class);
+        return doRequest(dto, HttpMethod.POST, "/api/appointments", AppointmentDto.class, status().isCreated());
     }
 }

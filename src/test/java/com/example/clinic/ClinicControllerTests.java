@@ -2,9 +2,9 @@ package com.example.clinic;
 
 import com.example.clinic.dto.ClinicDto;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class ClinicControllerTests extends BaseControllerTests {
 
-    @Autowired
-    private ResourceLoader resourceLoader;
+    @Value("classpath:images/new-logo.png")
+    private Resource logoResource;
 
     @Test
     @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
@@ -143,7 +143,6 @@ class ClinicControllerTests extends BaseControllerTests {
     }
 
     private MockMultipartFile buildMockMultipartFile() throws Exception {
-        var logoResource = resourceLoader.getResource("classpath:images/new-logo.png");
         try (var in = logoResource.getInputStream()) {
             return new MockMultipartFile("logo", "new-logo.png", "image/png", in);
         }

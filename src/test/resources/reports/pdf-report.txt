@@ -1,0 +1,7 @@
+Achme Clinic
+achme.clinic@email.com
+123456789
+Bob Bee
+Your Test Results
+Collection Date Test Name Test Result Result Date
+2024-03-07T12:00 Test 1 POSITIVE 2024-03-07T13:00

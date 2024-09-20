@@ -1,35 +1,53 @@
 package com.example.clinic;
 
 import com.example.clinic.dto.AppointmentCreateDto;
-import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.TestCreateDto;
 import com.example.clinic.dto.TestDto;
+import com.example.clinic.model.Appointment;
 import com.example.clinic.model.TestResult;
 import com.example.clinic.model.TestType;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Map;
+import java.util.List;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static com.example.clinic.BaseControllerTests.ADMIN_EMAIL;
 import static com.example.clinic.BaseControllerTests.DOCTOR;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser(username = ADMIN_EMAIL, roles = DOCTOR)
 public class TestControllerTests extends BaseControllerTests {
 
-    private AppointmentDto appointment;
+    @Value("classpath:reports/pdf-report.txt")
+    private Resource pdfTextResource;
+
+    private Appointment appointment;
     private LocalDateTime testDateTime;
+    private LocalDateTime resultDateTime;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         patient = domainUtil.createPatient(dummyPatient);
-        appointment = createAppointment(new AppointmentCreateDto(patient.getId()));
-        testDateTime = LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.MINUTES);
+        appointment = domainUtil.createAppointment(new AppointmentCreateDto(patient.getId()));
+
+        testDateTime = LocalDateTime.of(2024, 3, 7, 12, 0);
+        resultDateTime = LocalDateTime.of(2024, 3, 7, 13, 0);
     }
 
     @Test
@@ -51,9 +69,6 @@ public class TestControllerTests extends BaseControllerTests {
 
         // Arrange
         var test = createTest();
-
-        var testDateTime = LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.MINUTES);
-        var resultDateTime = LocalDateTime.now().plusHours(2).truncatedTo(ChronoUnit.MINUTES);
         test.setType(TestType.TEST2).setTestDateTime(testDateTime)
                 .setResult(TestResult.POSITIVE).setResultDateTime(resultDateTime);
 
@@ -100,6 +115,63 @@ public class TestControllerTests extends BaseControllerTests {
         assertThat(domainUtil.getAllPatients()).isEmpty();
     }
 
+    @Test
+    @WithMockUser(username = PATIENT_EMAIL, roles = PATIENT)
+    public void shouldGetPatientTests() throws Exception {
+
+        // Arrange
+        var test = createDummyTest();
+
+        // Act
+        var tests = doGetRequest("/api/tests", new TypeReference<List<TestDto>>() {
+        });
+
+        // Assert
+        assertThat(tests).hasSize(1).first()
+                .matches(t -> t.getId().equals(test.getId()))
+                .matches(t -> t.getType() == TestType.TEST1)
+                .matches(t -> t.getTestDateTime().equals(testDateTime))
+                .matches(t -> t.getResult() == TestResult.POSITIVE)
+                .matches(t -> t.getResultDateTime().equals(test.getResultDateTime()));
+    }
+
+    @Test
+    @WithMockUser(username = PATIENT_EMAIL, roles = PATIENT)
+    public void shouldGeneratePdf() throws Exception {
+
+        // Arrange
+        createDummyTest();
+
+        // Act
+        MvcResult mvcResult = this.mockMvc.perform(get("/api/tests/report")
+                        .accept(MediaType.APPLICATION_PDF_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE))
+                .andReturn();
+
+        // Assert
+        byte[] pdfBytes = mvcResult.getResponse().getContentAsByteArray();
+        String text = pdfBytesAsString(pdfBytes);
+
+        var expectedPdfText = new String(pdfTextResource.getContentAsByteArray(), UTF_8);
+        assertThat(text).isEqualTo(expectedPdfText);
+    }
+
+    private String pdfBytesAsString(byte[] pdfBytes) throws Exception {
+        InputStream inputStream = new ByteArrayInputStream(pdfBytes);
+        PDDocument document = PDDocument.load(inputStream);
+
+        PDFTextStripper pdfTextStripper = new PDFTextStripper();
+        return pdfTextStripper.getText(document);
+    }
+
+    private TestDto createDummyTest() {
+        var testCreateDto = new TestCreateDto().setAppointmentId(appointment.getId());
+        testCreateDto.setType(TestType.TEST1).setTestDateTime(testDateTime)
+                .setResult(TestResult.POSITIVE).setResultDateTime(resultDateTime);
+        return domainUtil.createTest(testCreateDto);
+    }
+
     private TestDto createTest() throws Exception {
         var createDto = new TestCreateDto().setAppointmentId(appointment.getId())
                 .setType(TestType.TEST1).setTestDateTime(testDateTime);
@@ -115,14 +187,10 @@ public class TestControllerTests extends BaseControllerTests {
     }
 
     private void deleteTest(Long id) throws Exception {
-        doRequest(Map.of(), HttpMethod.DELETE, "/api/tests/" + id, Void.class, status().isNoContent());
+        doDelete("/api/tests/" + id);
     }
 
     private void deletePatient(Long id) throws Exception {
-        doRequest(Map.of(), HttpMethod.DELETE, "/api/patients/" + id, Void.class, status().isNoContent());
-    }
-
-    private AppointmentDto createAppointment(AppointmentCreateDto dto) throws Exception {
-        return doRequest(dto, HttpMethod.POST, "/api/appointments", AppointmentDto.class, status().isCreated());
+        doDelete("/api/patients/" + id);
     }
 }

@@ -29,8 +29,13 @@ public class AppointmentService {
 
     @Transactional
     public AppointmentDto create(AppointmentCreateDto dto) {
+        return appointmentMapper.toDto(createEntity(dto));
+    }
+
+    @Transactional
+    public Appointment createEntity(AppointmentCreateDto dto) {
         var entity = appointmentMapper.toEntity(dto).setStatus(AppointmentStatus.NEW);
-        return appointmentMapper.toDto(appointmentRepository.saveAndRefresh(entity));
+        return appointmentRepository.saveAndRefresh(entity);
     }
 
     @Transactional(readOnly = true)

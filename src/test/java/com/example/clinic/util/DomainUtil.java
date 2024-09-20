@@ -1,10 +1,13 @@
 package com.example.clinic.util;
 
+import com.example.clinic.dto.AppointmentCreateDto;
 import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.PersonBaseDto;
 import com.example.clinic.dto.PersonDto;
+import com.example.clinic.dto.TestCreateDto;
 import com.example.clinic.dto.TestDto;
 import com.example.clinic.model.ActionType;
+import com.example.clinic.model.Appointment;
 import com.example.clinic.model.Doctor;
 import com.example.clinic.model.EntityType;
 import com.example.clinic.model.Log;
@@ -39,6 +42,14 @@ public class DomainUtil {
 
     public Patient createPatient(PersonBaseDto patient) {
         return patientService.createOrThrow(patient);
+    }
+
+    public Appointment createAppointment(AppointmentCreateDto dto) {
+        return appointmentService.createEntity(dto);
+    }
+
+    public TestDto createTest(TestCreateDto dto) {
+        return testService.create(dto);
     }
 
     public Doctor createDoctor(PersonBaseDto doctor) {

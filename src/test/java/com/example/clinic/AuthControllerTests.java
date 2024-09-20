@@ -7,11 +7,8 @@ import com.example.clinic.model.ActionType;
 import com.example.clinic.model.EntityType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.http.HttpMethod;
 
-import static com.example.clinic.util.TestUtil.asJsonString;
-import static com.example.clinic.util.TestUtil.fromJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,12 +56,8 @@ public class AuthControllerTests extends BaseControllerTests {
         var signInDto = new SignInDto().setEmail("foo").setPassword("bar");
 
         // Act & Assert
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/sign-in/doctor")
-                        .content(asJsonString(signInDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isInternalServerError())
-                .andReturn();
+        var mvcResult = doMvcRequest(signInDto, HttpMethod.POST,
+                "/api/auth/sign-in/doctor", status().isInternalServerError()); // TODO: fix the status
 
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Bad credentials");
     }
@@ -101,14 +94,7 @@ public class AuthControllerTests extends BaseControllerTests {
         var signInDto = new SignInDto().setEmail(admin.getEmail()).setPassword(admin.getPassword());
 
         // Act
-        var mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/sign-in/doctor")
-                        .content(asJsonString(signInDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return fromJsonString(mvcResult, JwtAuthenticationDto.class);
+        return doRequest(signInDto, HttpMethod.POST, "/api/auth/sign-in/doctor", JwtAuthenticationDto.class);
     }
 
     private JwtAuthenticationDto loginAsPatient() throws Exception {
@@ -118,13 +104,6 @@ public class AuthControllerTests extends BaseControllerTests {
         var signInDto = new SignInDto().setEmail(patient.getEmail()).setPassword(dummyPatient.getPassword());
 
         // Act
-        var mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/sign-in/patient")
-                        .content(asJsonString(signInDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return fromJsonString(mvcResult, JwtAuthenticationDto.class);
+        return doRequest(signInDto, HttpMethod.POST, "/api/auth/sign-in/patient", JwtAuthenticationDto.class);
     }
 }
