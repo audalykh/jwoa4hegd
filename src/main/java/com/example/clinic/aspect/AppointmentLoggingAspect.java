@@ -12,6 +12,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+/**
+ * This aspect class intercepts the create, update, and delete actions of the AppointmentService class
+ * and logs the relevant information.
+ */
 @Slf4j
 @Aspect
 @Component

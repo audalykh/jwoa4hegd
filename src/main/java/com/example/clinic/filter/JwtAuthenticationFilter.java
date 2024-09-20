@@ -68,6 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(jwt, person)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
+                // Store the person id in the authentication token to be used for DB auditing
                 UsernamePasswordAuthenticationToken authToken = new CustomUsernamePasswordAuthenticationToken(
                         person.getId(),
                         person.getEmail(),

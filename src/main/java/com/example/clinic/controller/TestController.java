@@ -64,9 +64,6 @@ public class TestController {
      * Retrieves the list of medical tests taken by a specific patient.
      * The list includes all tests taken by the patient from all the visits.
      * The list is sorted in ascending order based on the test submission time.
-     *
-     * @param principal the principal object representing the authenticated patient
-     * @return the list of medical tests taken by the patient
      */
     @GetMapping
     @Secured(ROLE_PATIENT)

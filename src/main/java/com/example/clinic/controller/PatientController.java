@@ -38,9 +38,13 @@ public class PatientController {
         return patientService.getPage(pageable).getContent();
     }
 
+    /**
+     * Creates a new patient using the given dto.
+     * @throws PersonAlreadyExistException if a patient with the same email already exists
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PersonDto create(@RequestBody @Valid PersonBaseDto dto) throws PersonAlreadyExistException {
+    public PersonDto create(@RequestBody @Valid PersonBaseDto dto) {
         return patientService.create(dto);
     }
 

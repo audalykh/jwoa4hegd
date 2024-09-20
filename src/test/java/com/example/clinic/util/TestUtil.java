@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.test.web.servlet.MvcResult;
 
+/**
+ * This class provides utility methods for working with JSON objects using Jackson ObjectMapper.
+ */
 public class TestUtil {
 
     private static final ObjectMapper OBJECT_MAPPER;

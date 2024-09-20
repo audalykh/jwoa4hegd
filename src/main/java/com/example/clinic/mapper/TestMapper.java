@@ -17,6 +17,10 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 )
 public interface TestMapper {
 
+    /**
+     * Converts a TestCreateDto object to a Test object.
+     * If the result of the dto is null, sets the result of the entity to TestResult.UNKNOWN.
+     */
     @Mapping(target = "result", expression =
             "java(dto.getResult() != null ? dto.getResult() : com.example.clinic.model.TestResult.UNKNOWN)")
     Test toEntity(TestCreateDto dto);

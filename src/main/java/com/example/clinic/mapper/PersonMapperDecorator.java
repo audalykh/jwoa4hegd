@@ -34,6 +34,9 @@ public abstract class PersonMapperDecorator implements PersonMapper {
         return initPassword(delegate.toEntity(dto, entity), dto);
     }
 
+    /**
+     * Initializes the password of a person entity with the provided password from the DTO on person create or update.
+     */
     private <T extends Person> T initPassword(T entity, PersonBaseDto dto) {
         if (entity != null) {
             entity.setPassword(passwordEncoder.encode(dto.getPassword()));

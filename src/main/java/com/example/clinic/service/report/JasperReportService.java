@@ -13,6 +13,9 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class responsible for generating Jasper reports.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

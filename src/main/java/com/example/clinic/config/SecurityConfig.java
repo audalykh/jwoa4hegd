@@ -24,6 +24,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+/**
+ * The SecurityConfig class is responsible for configuring the security settings and mechanisms in the application.
+ */
 @Slf4j
 @EnableWebSecurity
 @Configuration
@@ -42,6 +45,7 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // no need for CSRF protection or CORS policy in this application
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
@@ -52,6 +56,9 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
         return http.build();
     }
 
+    /**
+     * Create two different authentication providers for patients and doctors.
+     */
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider(patientUserDetailsService, passwordEncoder()))

@@ -16,6 +16,10 @@ import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * JwtService class is responsible for handling JWT (JSON Web Token) generation and validation.
+ * It provides methods for extracting claims from a token, generating a token, and checking the validity of a token.
+ */
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -39,6 +43,9 @@ public class JwtService {
         return Role.valueOf(extractClaim(token, claims -> claims.get(ROLE, String.class)));
     }
 
+    /**
+     * Generates a JWT (JSON Web Token) for the given person.
+     */
     public String generateToken(Person person) {
         Map<String, Object> claims = Map.of(
                 ACTOR_ID, person.getId(),

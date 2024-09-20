@@ -3,6 +3,7 @@ package com.example.clinic.controller;
 import com.example.clinic.dto.ClinicBaseDto;
 import com.example.clinic.dto.ClinicDto;
 import com.example.clinic.dto.LogoResourceDto;
+import com.example.clinic.exception.ClinicAlreadyExistException;
 import com.example.clinic.service.ClinicService;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -30,6 +31,10 @@ public class ClinicController {
 
     private final ClinicService clinicService;
 
+    /**
+     * Creates a new clinic with the provided clinicDto and logo file unless there is already an existing clinic.
+     * @throws ClinicAlreadyExistException if a clinic already exists in the database
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ClinicDto create(@Valid ClinicBaseDto clinicDto,

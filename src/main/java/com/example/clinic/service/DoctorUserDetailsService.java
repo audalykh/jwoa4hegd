@@ -8,6 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * The DoctorUserDetailsService class is responsible for loading a doctor for authentication
+ * based on the given username/email. It implements the UserDetailsService interface.
+ */
 @Service
 @RequiredArgsConstructor
 public class DoctorUserDetailsService implements UserDetailsService {

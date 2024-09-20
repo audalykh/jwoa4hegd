@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.AuditorAware;
 
+/**
+ * This class is a configuration class for testing purposes.
+ * It provides a bean for the auditorProvider with primary annotation.
+ */
 @TestConfiguration
 public class TestConfig {
 

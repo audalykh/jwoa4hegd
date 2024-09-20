@@ -1,6 +1,7 @@
 package com.example.clinic;
 
 import com.example.clinic.dto.AppointmentCreateDto;
+import com.example.clinic.dto.AppointmentDto;
 import com.example.clinic.dto.TestCreateDto;
 import com.example.clinic.dto.TestDto;
 import com.example.clinic.model.Appointment;
@@ -113,6 +114,22 @@ public class TestControllerTests extends BaseControllerTests {
         // Assert
         assertThat(domainUtil.getAllTests()).isEmpty();
         assertThat(domainUtil.getAllPatients()).isEmpty();
+    }
+
+    @Test
+    public void shouldReturnTestsAsPartOfAppointment() throws Exception {
+
+        // Arrange
+        createTest();
+
+        // Act
+        var appointmentDto = doGetRequest("/api/appointments/" + appointment.getId(),
+                new TypeReference<AppointmentDto>() { });
+
+        // Assert
+        assertThat(appointmentDto.getTests())
+                .matches(t -> t.size() == 1).singleElement()
+                .matches(t -> t.getType() == TestType.TEST1);
     }
 
     @Test

@@ -7,10 +7,17 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of the {@link ExtendedJpaRepository} interface.
+ * Extends the {@link SimpleJpaRepository} class and provides additional functionality for saving
+ * and refreshing entities.
+ *
+ * @param <T> the type of the entity
+ * @param <V> the type of the entity's identifier
+ */
 @NoRepositoryBean
 public class ExtendedJpaRepositoryImpl<T, V extends Serializable>
-        extends SimpleJpaRepository<T, V>
-        implements ExtendedJpaRepository<T, V> {
+        extends SimpleJpaRepository<T, V> implements ExtendedJpaRepository<T, V> {
 
     private final EntityManager em;
 

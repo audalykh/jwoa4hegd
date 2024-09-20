@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * DbUtil class provides utility methods for interacting with the database using JDBC.
+ */
 @Component
 public class DbUtil {
 

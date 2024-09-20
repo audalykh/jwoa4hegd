@@ -16,6 +16,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is an aspect that provides logging functionality for the PatientService class.
+ * It logs the creation, update, and deletion of patients, as well as their associated appointments.
+ * The logs are saved using the LogService class.
+ */
 @Slf4j
 @Aspect
 @Component

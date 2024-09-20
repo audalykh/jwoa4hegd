@@ -15,6 +15,10 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+/**
+ * This class provides functionality for initializing the application on startup.
+ * It creates an admin doctor and a default clinic if necessary.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -49,7 +53,7 @@ public class InitializationService {
     }
 
     private void createAdminDoctor() {
-        log.info("Admin doctor not found, creating new one");
+        log.info("Admin doctor not found, creating a new one");
 
         var doctor = dataConfiguration.getAdminDoctor();
         doctorService.createOrThrow(new PersonBaseDto()

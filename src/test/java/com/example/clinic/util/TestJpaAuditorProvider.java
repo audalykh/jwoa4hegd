@@ -7,6 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+/**
+ * TestJpaAuditorProvider is a class that extends DefaultJpaAuditorProvider to provide custom logic for retrieving
+ * the auditor ID from the authentication object.
+ * As long as in the tests JWT token is not used and actorId can not be fetched from the token, it is needed to
+ * get the actorId from the database based on the current username and role.
+ */
 @RequiredArgsConstructor
 public class TestJpaAuditorProvider extends DefaultJpaAuditorProvider {
 

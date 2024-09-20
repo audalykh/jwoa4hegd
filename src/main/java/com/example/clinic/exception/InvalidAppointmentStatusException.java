@@ -4,6 +4,9 @@ import com.example.clinic.model.AppointmentStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+/**
+ * Represents an exception that is thrown when an invalid appointment status transition is attempted.
+ */
 public class InvalidAppointmentStatusException extends HttpClientErrorException {
 
     public InvalidAppointmentStatusException(AppointmentStatus oldStatus, AppointmentStatus newStatus) {

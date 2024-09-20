@@ -5,6 +5,10 @@ import lombok.Getter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * CustomUsernamePasswordAuthenticationToken is a subclass of UsernamePasswordAuthenticationToken
+ * that represents an authentication token with additional actorId information.
+ */
 @Getter
 public class CustomUsernamePasswordAuthenticationToken extends UsernamePasswordAuthenticationToken {
 

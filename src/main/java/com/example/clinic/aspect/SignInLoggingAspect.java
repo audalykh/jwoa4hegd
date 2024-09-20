@@ -14,11 +14,15 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+/**
+ * The SignInLoggingAspect class is an aspect that handles logging for successful sign-in operations.
+ * It is triggered after the signIn method of the authenticationService bean is executed.
+ */
 @Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class SigninLoggingAspect {
+public class SignInLoggingAspect {
 
     private final LogService logService;
 
@@ -29,10 +33,9 @@ public class SigninLoggingAspect {
 
     @AfterReturning(pointcut = "signInPointcut(signInDto, role)", returning = "result",
             argNames = "signInDto, role, result")
-    public void afterSuccessfulSignIn(@SuppressWarnings("unused") SignInDto signInDto,
-                                      Role role, JwtAuthenticationDto result) {
+    public void afterSuccessfulSignIn(SignInDto signInDto, Role role, JwtAuthenticationDto result) {
         var person = result.getPerson();
-        log.trace("Authentication successful for user: {} with role: {}", person.getEmail(), role);
+        log.trace("Authentication successful for user: {} with role: {}", signInDto.getEmail(), role);
 
         var entityType = switch (role) {
             case DOCTOR -> EntityType.DOCTOR;
